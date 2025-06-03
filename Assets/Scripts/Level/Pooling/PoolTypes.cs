@@ -10,6 +10,7 @@ namespace Game.Level.Pooling
         Unkown,
         Passenger,
         Bus,
+        GridCell,
     }
 
 

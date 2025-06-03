@@ -7,7 +7,7 @@ using UnityEngine.AI;
 namespace Game.Level
 {
 
-    public partial class Passenger : MonoBehaviour
+    public partial class Passenger
     {
         private static readonly int anim_moving = Animator.StringToHash("Moving");
 

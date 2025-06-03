@@ -14,6 +14,7 @@ namespace Game.Level
 
         public event Action<Passenger, Bus> onPassengerGetOnBus;
         public event Action<Passenger, GridCell> onPassengerStartedToWaiting; //Primary Grid
+        public event Action<Passenger> onPassengerSelected;
     }
 
 }

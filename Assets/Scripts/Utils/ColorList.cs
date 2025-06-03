@@ -35,10 +35,10 @@ namespace Game.Utils
                 case ColorList.Green: return Color.green;
                 case ColorList.Blue: return Color.blue;
                 case ColorList.Yellow: return Color.yellow;
-                case ColorList.Orange: return new Color(1.0f, 0.5f, 0.0f); 
+                case ColorList.Orange: return new Color(1.0f, 0.5f, 0.0f);
                 case ColorList.Pink: return new Color(1.0f, 0.75f, 0.8f);
-                case ColorList.Purple: return new Color(0.5f, 0.0f, 0.5f); 
-                case ColorList.Cyan: return new Color(0.0f, 1.0f, 1.0f); 
+                case ColorList.Purple: return new Color(0.5f, 0.0f, 0.5f);
+                case ColorList.Cyan: return new Color(0.0f, 1.0f, 1.0f);
                 default: return Color.white;
             }
         }
@@ -53,6 +53,16 @@ namespace Game.Utils
         {
             renderer.color = GetColor(color);
         }
+
+        public static ColorList GetRandomColor()
+        {
+            int randomIndex = Random.Range(0, System.Enum.GetValues(typeof(ColorList)).Length);
+            return (ColorList)randomIndex;
+        }
+
+
+        public static Color ToColor(this ColorList color) => GetColor(color);
+
     }
 
 }

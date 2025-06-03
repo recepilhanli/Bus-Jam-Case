@@ -8,12 +8,23 @@ namespace Game.Level
     public partial class GameManager : MonoSingleton<GameManager>
     {
 
+        private void Start()
+        {
+            InitTapping();
+            InitBuses();
+        }
+
 
         private void Update()
         {
-            
+
         }
 
+
+        public void Reset()
+        {
+            _currentColorIndex = 0;
+        }
 
     }
 

@@ -11,9 +11,9 @@ namespace Game.Level
 
         [Header("Appearance")]
         public Renderer _renderer;
-        private ColorList _color;
+        [SerializeField] private ColorList _color;
 
-        public ColorList Color
+        public ColorList color
         {
             get => _color;
             set

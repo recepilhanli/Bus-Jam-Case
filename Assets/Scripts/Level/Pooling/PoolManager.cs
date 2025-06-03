@@ -9,7 +9,7 @@ namespace Game.Level.Pooling
 
     public static class PoolManager
     {
-        private const string POOL_CONTAINER_PATH = "Pooling/PoolContainer";
+        private const string POOL_CONTAINER_PATH = "Pooling/Pool Container";
 
         private static Dictionary<PoolTypes, Pool> _pools = new Dictionary<PoolTypes, Pool>();
 

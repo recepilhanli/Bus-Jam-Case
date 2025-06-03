@@ -12,7 +12,7 @@ namespace Game.Level
     {
         [Header("Appearance")]
         public Renderer _renderer;
-        private ColorList _color;
+        [SerializeField] private ColorList _color;
 
         public ColorList Color
         {
@@ -24,6 +24,26 @@ namespace Game.Level
             }
         }
 
+        [ContextMenu("Mark Passenger")]
+        public void MarkPassenger()
+        {
+            Material[] sharedMaterials = _renderer.sharedMaterials;
+            if (sharedMaterials.Length > 2) return;
+            sharedMaterials = new Material[2] { sharedMaterials[0], GameManager.instance.markPassengerMaterial };
+            _renderer.sharedMaterials = sharedMaterials;
+        }
+
+        [ContextMenu("Unmark Passenger")]
+        public void UnmarkPassenger()
+        {
+            Material[] sharedMaterials = _renderer.sharedMaterials;
+            if (sharedMaterials.Length < 2) return;
+            sharedMaterials = new Material[1] { sharedMaterials[0] };
+            _renderer.sharedMaterials = sharedMaterials;
+        }
+
+        [ContextMenu("Update Color")]
+        public void UpdateColor() => ColorHelper.SetRendererColor(_renderer, _color);
     }
 
 }

@@ -42,13 +42,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _LightStrength: 0
+    - _LightStrength: 0.117
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 0}
-    - _CutOffThreshold: {r: -8.54, g: 4.01, b: 0, a: 0}
-    - _Light_Direction: {r: 6.28, g: 1.92, b: 1.83, a: 0}
+    - _CutOffThreshold: {r: 0, g: 0, b: 0, a: 0}
+    - _Light_Direction: {r: 1, g: 0.65, b: 0.22, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &7359888577130096264
 MonoBehaviour:

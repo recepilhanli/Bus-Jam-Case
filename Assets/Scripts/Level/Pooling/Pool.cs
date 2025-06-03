@@ -35,8 +35,10 @@ namespace Game.Level.Pooling
                 obj.OnSpawn(position, rotation);
                 return obj;
             }
-            else Create(in position, in rotation);
-            return null;
+
+            IPoolable newObj = Create(in position, in rotation);
+            newObj.OnSpawn(position, rotation);
+            return newObj;
         }
 
         public void ReturnToPool(IPoolable obj)
