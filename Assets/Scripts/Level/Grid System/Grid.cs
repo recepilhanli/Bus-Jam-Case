@@ -96,6 +96,15 @@ namespace Game.Level
                     Gizmos.DrawWireCube(cellPosition, new Vector3(cellSize, 0.1f, cellSize));
                 }
             }
+
+            //draw arrow to represnt grid direction (first column, last column, first row, last row)
+            Gizmos.color = Color.red;
+            Vector3 firstColumn = GetCellWorldPosition(new Vector2Int(0, 0));
+            Vector3 lastColumn = GetCellWorldPosition(new Vector2Int(width - 1, 0));
+            Vector3 firstRow = GetCellWorldPosition(new Vector2Int(0, 0));
+            Vector3 lastRow = GetCellWorldPosition(new Vector2Int(0, height - 1));
+            Gizmos.DrawLine(firstColumn, lastColumn);
+            Gizmos.DrawLine(firstRow, lastRow);
         }
     }
 #endif

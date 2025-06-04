@@ -47,25 +47,31 @@ namespace Game.Level
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, TAP_LAYER_MASK))
             {
                 GameObject gameObject = hit.collider.gameObject;
-                GridCell cell = GridCell.GetActualType(gameObject);
+                CheckCell(gameObject);
+            }
+        }
 
-                if (cell.isInPrimaryGrid) return;
+        private void CheckCell(GameObject gameObject)
+        {
+            GridCell cell = GridCell.GetActualType(gameObject);
 
-                Passenger passenger = cell.RemovePassenger();
-                if (!passenger) return;
+            if (cell.isInPrimaryGrid) return;
 
-                onPassengerSelected?.Invoke(passenger);
-                
-                if (!cell.hasSpaceToMove)
-                {
-                    Debug.LogError($"Cell at {cell.position} has no space to move passenger: {passenger.name}");
-                    return;
-                }
+            Passenger passenger = cell.RemovePassenger();
+            if (!passenger) return;
 
-                passenger.MoveToPrimaryGrid();
-                Debug.Assert(cell != null, $"Passenger not found for GameObject: {gameObject.name}");
+
+            if (!cell.hasSpaceToMove)
+            {
+                Debug.LogError($"Cell at {cell.position} has no space to move passenger: {passenger.name}");
+                onPlayerAttemptedToMovePassenger?.Invoke(passenger, false);
+                return;
             }
 
+            bool success = MovePassengerToPrimaryGrid(passenger);
+            onPlayerAttemptedToMovePassenger?.Invoke(passenger, success);
+
+            Debug.Assert(cell != null, $"Passenger not found for GameObject: {gameObject.name}");
         }
 
     }

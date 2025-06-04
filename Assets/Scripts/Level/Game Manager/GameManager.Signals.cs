@@ -9,12 +9,26 @@ namespace Game.Level
     {
         public event Action OnGameStarted;
         public event Action OnGamePaused;
-        public event Action<Bus> onBusArrived;
-        public event Action<Bus> onBusLeft;
+
+        public event Action<Bus> onActiveBusArrived;
+        public event Action<Bus> onOldActiveBusLeft;
 
         public event Action<Passenger, Bus> onPassengerGetOnBus;
-        public event Action<Passenger, GridCell> onPassengerStartedToWaiting; //Primary Grid
-        public event Action<Passenger> onPassengerSelected;
+        public event Action<Passenger, bool> onPlayerAttemptedToMovePassenger; //bool - true: success, false: failure
+
+        private void DispatchOldActiveBusLeftEvent() //Prevent lambda allocation
+        {
+            if (_reservedBus == null) return;
+            onOldActiveBusLeft?.Invoke(_reservedBus);
+            _reservedBus.ReturnSpawnPoint();
+        }
+
+        private void DispatchNewActiveBusArrivedEvent() //Prevent lambda allocation
+        {
+            if (_reservedBus == null) return;
+            onActiveBusArrived?.Invoke(_reservedBus);
+        }
+
     }
 
 }

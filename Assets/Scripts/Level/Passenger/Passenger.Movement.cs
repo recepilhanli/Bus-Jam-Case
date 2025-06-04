@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game.Utils;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,53 +11,25 @@ namespace Game.Level
 
     public partial class Passenger
     {
-        public NavMeshAgent agent;
+        private const float DEFAULT_MOVE_DURATION = 1.5f;
+        private const Ease DEFAULT_MOVE_EASE = Ease.OutQuad;
 
-        public void MoveToCell(GridCell cell)
+        public Sequence MoveToCell(GridCell cell) //TO DO: Sample NavMesh for pathfinding
         {
-            if (agent == null)
-            {
-                Debug.LogError("NavMeshAgent is not assigned.");
-                return;
-            }
-
-            transform.position = cell.worldPosition; //Temp
+            Sequence movementSequence = Sequence.Create()
+           .Chain(Tween.Position(transform, cell.worldPosition, DEFAULT_MOVE_DURATION, DEFAULT_MOVE_EASE));
+            return movementSequence;
         }
 
-        public void MoveToBus(Bus bus)
+        public void MoveToActiveBus()
         {
-            if (agent == null)
-            {
-                Debug.LogError("NavMeshAgent is not assigned.");
-                return;
-            }
-
-            transform.position = bus.transform.position; //Temp: Will be animated later
-            bus.AddPassenger(this); //Temp: Will be animated later (It has to called after passenger get on the bus)
+            if (activeBus && !activeBus.TryAddPassenger(this)) return;
+            Tween.Position(transform, GameManager.instance.activeBusPosition.position, DEFAULT_MOVE_DURATION, DEFAULT_MOVE_EASE).OnComplete(this, activeBus.onPassengerGetOnBus);
+            return;
         }
 
-        public void MoveToPrimaryGrid() //Temp
-        {
-            ColorList busColor = activeBus.color;
-
-            if (busColor == Color)
-            {
-                MoveToBus(activeBus);
-                return;
-            }
 
 
-            Grid primaryGrid = GameManager.instance.primaryGrid;
-            Debug.Assert(primaryGrid != null, "Primary grid is not assigned in GameManager.");
-            GridCell cell = primaryGrid.GetEmptyCell();
-            if (cell == null)
-            {
-                Debug.LogError("No empty cell found in the primary grid.");
-                return;
-            }
-            transform.position = cell.worldPosition; //Temp
-            cell.SetPassenger(this); // Set the passenger in the cell
-        }
 
 
     }

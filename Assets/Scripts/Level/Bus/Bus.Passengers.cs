@@ -12,10 +12,12 @@ namespace Game.Level
 
         [Header("Passenger Settings")]
         [Tooltip("Read-Only")][SerializeField] Passenger[] passengers = null;
+        private int _totalPassengersInBus = 0;
 
         private void InitPassengers()
         {
             passengers = new Passenger[MAX_PASSENGERS];
+            onPassengerGetOnBus += OnPassengerGetOn;
         }
 
         public void ReleasePassengers()
@@ -27,28 +29,30 @@ namespace Game.Level
                     passenger.ReturnToPool();
                 }
             }
+
+            _totalPassengersInBus = 0;
         }
 
-        public void AddPassenger(Passenger passenger)
+        public bool TryAddPassenger(Passenger passenger)
         {
-            int lastIndex = 0;
             for (int i = 0; i < passengers.Length; i++)
             {
                 if (passengers[i] == null)
                 {
                     passengers[i] = passenger;
-                    lastIndex = i;
-                    break;
+                    return true;
                 }
             }
-
-            if (lastIndex == MAX_PASSENGERS - 1) GameManager.instance.ActivateNextBus();
-           
-
-
-        
+            return false; // No empty slot found
         }
 
+        private void OnPassengerGetOn(Passenger passenger)
+        {
+            _totalPassengersInBus++; 
+            Debug.Log($"Passenger {passenger.name} got on the bus. Total passengers: {_totalPassengersInBus}/{MAX_PASSENGERS}");
+            Debug.Assert(GameManager.instance.activeBus == this, "This must called only for the active bus.");
+            if (_totalPassengersInBus >= MAX_PASSENGERS) GameManager.instance.ActivateNextBus();
+        }
 
 
     }

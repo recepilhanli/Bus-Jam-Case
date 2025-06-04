@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 namespace Game.Level.Pooling
@@ -9,6 +10,7 @@ namespace Game.Level.Pooling
 
     public static class PoolManager
     {
+        private const int GAME_SCENE_BUILD_INDEX = 1;
         private const string POOL_CONTAINER_PATH = "Pooling/Pool Container";
 
         private static Dictionary<PoolTypes, Pool> _pools = new Dictionary<PoolTypes, Pool>();
@@ -32,6 +34,20 @@ namespace Game.Level.Pooling
             _poolParent.gameObject.SetActive(true);
             _poolParent.hideFlags = HideFlags.HideAndDontSave;
             Object.DontDestroyOnLoad(_poolParent.gameObject);
+            SceneManager.activeSceneChanged += OnSceneChanged;
+        }
+
+        private static void OnSceneChanged(Scene oldScene, Scene newScene)
+        {
+            if (oldScene.buildIndex == GAME_SCENE_BUILD_INDEX) ResetAllPools();
+        }
+
+        private static void ResetAllPools()
+        {
+            foreach (var pool in _pools.Values)
+            {
+                pool.ReturnAllToPool();
+            }
         }
 
         public static Pool GetPool(PoolTypes poolType)

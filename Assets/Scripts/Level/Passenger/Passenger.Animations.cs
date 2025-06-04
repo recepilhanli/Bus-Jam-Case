@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,7 +15,17 @@ namespace Game.Level
         [Header("Animations")]
         public Animator animator;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetAnimatorToMoving(bool isMoving) => animator.SetBool(anim_moving, isMoving);
+
+        //Prevent lambda allocations
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void EnableMoveAnimation() => SetAnimatorToMoving(true);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void DisableMoveAnimation() => SetAnimatorToMoving(false);
+
+
+
 
     }
 

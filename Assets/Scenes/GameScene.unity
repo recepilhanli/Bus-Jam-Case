@@ -891,7 +891,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42421cb0e10287e40832477889ec6515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  busList: 00000000
+  busList: 0000000005000000
   busSpawnPosition: {fileID: 711958756}
   activeBusPosition: {fileID: 2008103193}
   nextBusPosition: {fileID: 1311502093}

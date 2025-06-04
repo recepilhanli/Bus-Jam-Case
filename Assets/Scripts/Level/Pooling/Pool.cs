@@ -10,6 +10,7 @@ namespace Game.Level.Pooling
     public sealed class Pool
     {
         private Queue<IPoolable> _pooledObjects;
+        private HashSet<IPoolable> _activeObjects;
         public GameObject prefab;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -24,19 +25,24 @@ namespace Game.Level.Pooling
             Pool pool = new();
             pool.prefab = containerObject.prefab;
             pool._pooledObjects = new Queue<IPoolable>();
+            pool._activeObjects = new HashSet<IPoolable>();
+            pool._activeObjects.EnsureCapacity(10);
             return pool;
         }
+
 
         public IPoolable GetObject(in Vector3 position, in Quaternion rotation)
         {
             if (_pooledObjects.Count > 0)
             {
                 IPoolable obj = _pooledObjects.Dequeue();
+                _activeObjects.Add(obj);
                 obj.OnSpawn(position, rotation);
                 return obj;
             }
 
             IPoolable newObj = Create(in position, in rotation);
+            _activeObjects.Add(newObj);
             newObj.OnSpawn(position, rotation);
             return newObj;
         }
@@ -51,6 +57,7 @@ namespace Game.Level.Pooling
 
             obj.OnDespawn();
             _pooledObjects.Enqueue(obj);
+            _activeObjects.Remove(obj);
         }
 
         private IPoolable Create(in Vector3 position, in Quaternion rotation)
@@ -67,7 +74,15 @@ namespace Game.Level.Pooling
             return poolable;
         }
 
-
+        public void ReturnAllToPool()
+        {
+            foreach (var obj in _activeObjects)
+            {
+                obj.OnDespawn();
+                _pooledObjects.Enqueue(obj);
+            }
+            _activeObjects.Clear();
+        }
 
 
         private Pool() { }
