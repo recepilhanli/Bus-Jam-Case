@@ -23,6 +23,7 @@ namespace Game.Level
         public void OnDespawn()
         {
             gameObject.SetActive(false);
+            transform.SetParent(PoolManager.poolParent, true);
             UnmarkPassenger();
         }
 

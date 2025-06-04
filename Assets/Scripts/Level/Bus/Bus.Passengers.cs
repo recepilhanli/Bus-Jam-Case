@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Game;
 using Game.Level.Pooling;
+using PrimeTween;
 using UnityEngine;
 
 namespace Game.Level
 {
     public partial class Bus : MonoBehaviour, IPoolable
     {
+        private const float DEFAULT_SHAKE_DURATION = .4f;
+        private static readonly Vector3 _shakeScaleStrength = new Vector3(.5f, .5f, 0.5f);
+
         public const int MAX_PASSENGERS = 3;
 
         [Header("Passenger Settings")]
@@ -55,6 +59,8 @@ namespace Game.Level
             Debug.Assert(GameManager.instance.activeBus == this, "This must called only for the active bus.");
             if (_totalPassengersInBus >= MAX_PASSENGERS) GameManager.instance.ActivateNextBus();
             passenger.DisableMoveAnimation();
+            Tween.PunchScale(transform, _shakeScaleStrength, DEFAULT_SHAKE_DURATION);
+            passenger.transform.SetParent(transform, true);
         }
 
 

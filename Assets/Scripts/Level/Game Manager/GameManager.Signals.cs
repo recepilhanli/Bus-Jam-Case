@@ -12,6 +12,9 @@ namespace Game.Level
 
         public event Action<Bus> onActiveBusArrived;
         public event Action<Bus> onOldActiveBusLeft;
+        
+        public event Action onLevelCompleted;
+        public event Action onLevelFailed;
 
         public event Action<Passenger, Bus> onPassengerGetOnBus;
         public event Action<Passenger, bool> onPlayerAttemptedToMovePassenger; //bool - true: success, false: failure

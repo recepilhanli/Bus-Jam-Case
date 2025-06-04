@@ -11,13 +11,11 @@ namespace Game.Level
         public Grid primaryGrid; //Near to the bus
         public Grid secondaryGrid;
 
-
         private void InitGrids()
         {
             onActiveBusArrived += CheckPrimaryGrid;
             CheckSecondaryGridFrontLine();
         }
-
 
         private void CheckPrimaryGrid(Bus arrivedBus)
         {

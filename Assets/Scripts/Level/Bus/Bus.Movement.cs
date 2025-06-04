@@ -10,10 +10,11 @@ namespace Game.Level
 {
     public partial class Bus
     {
-        private const float DEFAULT_MOVEMENT_DURATION = 2f;
+        private const float DEFAULT_MOVEMENT_DURATION = 1f;
+        private const float DEFAULT_SHAKE_ROTATION_DURATION = .35f;
         private const Ease DEFAULT_MOVEMENT_EASE = Ease.InOutQuad;
 
-        private static readonly Vector3 _shakeStrength = new Vector3(.5f, .5f, .5f);
+        private static readonly Vector3 _shakeRotationStrength = new Vector3(2f, 0f, 2f);
 
         public static Vector3 spawnPosition => GameManager.instance.busSpawnPosition.position;
         public static Vector3 dissappearingPosition => GameManager.instance.busDisappearPosition.position;
@@ -39,10 +40,10 @@ namespace Game.Level
                 Debug.LogError("Cannot overwrite a movement tween while the bus is moving.");
                 return;
             }
-
-            _currentTween = Tween.ShakeLocalRotation(transform, _shakeStrength, 0.2f, 0.1f, true, Ease.InOutSine, cycles: -1);
+          
+            _currentTween = Tween.ShakeLocalRotation(transform, _shakeRotationStrength, DEFAULT_SHAKE_ROTATION_DURATION, 10, asymmetryFactor: .6f, cycles: -1, easeBetweenShakes: Ease.InOutBounce);
         }
-        
+
 
         public void ReturnSpawnPoint()
         {

@@ -16,11 +16,21 @@ namespace Game.Level
         public Camera mainCamera;
         public PlayerInput playerInput;
 
+        private InputAction _tapAction;
+
+#if UNITY_EDITOR
+        private InputAction _pressAction;
+#endif
+
         private void InitTapping()
         {
-            playerInput.actions.FindAction("Tap").performed += OnTap;
+            _tapAction = playerInput.actions.FindAction("Tap");
+            _tapAction.performed += OnTap;
+
 #if UNITY_EDITOR
-            playerInput.actions.FindAction("Press").performed += OnPress; //mouse
+            //mouse
+            _pressAction = playerInput.actions.FindAction("Press");
+            _pressAction.performed += OnPress;
 #endif
 
         }
@@ -84,6 +94,30 @@ namespace Game.Level
 
 
             onPlayerAttemptedToMovePassenger?.Invoke(passenger, success);
+        }
+
+        public void SetEnableInput(bool enable)
+        {
+            if (enable) EnableInput();
+            else DisableInput();
+        } 
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void DisableInput()
+        {
+            _tapAction.Disable();
+#if UNITY_EDITOR
+            _pressAction.Disable();
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void EnableInput()
+        {
+            _tapAction.Enable();
+#if UNITY_EDITOR
+            _pressAction.Enable();
+#endif
         }
 
     }

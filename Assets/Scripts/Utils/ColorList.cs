@@ -62,7 +62,6 @@ namespace Game.Utils
 
 
         public static Color ToColor(this ColorList color) => GetColor(color);
-
     }
 
 }
