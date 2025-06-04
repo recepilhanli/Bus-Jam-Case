@@ -12,6 +12,7 @@ namespace Game.Level
         {
             InitTapping();
             InitBuses();
+            InitGrids();
         }
 
 

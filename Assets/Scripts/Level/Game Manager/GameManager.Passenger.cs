@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Game.Utils;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Game.Level
 {
@@ -37,6 +38,16 @@ namespace Game.Level
 
             passenger.MoveToCell(cell);
             cell.SetPassenger(passenger);
+            return true;
+        }
+
+        public bool RemovePassengerFromPrimaryGrid(GridCell primaryCell)
+        {
+            Debug.Assert(primaryCell != null, "Cell is null.");
+            Debug.Assert(primaryCell.isInPrimaryGrid, "Cell is not in the primary grid.");
+            var passenger = primaryCell.RemovePassenger();
+            passenger.MoveToActiveBus();
+            Debug.Assert(passenger.Color == activeBusColor, "Passenger color does not match the active bus color.");
             return true;
         }
 

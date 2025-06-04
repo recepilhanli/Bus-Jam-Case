@@ -8,7 +8,7 @@ namespace Game.Level
 {
     public partial class Bus : MonoBehaviour, IPoolable
     {
-        private const int MAX_PASSENGERS = 3;
+        public const int MAX_PASSENGERS = 3;
 
         [Header("Passenger Settings")]
         [Tooltip("Read-Only")][SerializeField] Passenger[] passengers = null;

@@ -38,8 +38,7 @@ namespace Game.Level
                     return;
                 }
                 _activeBus = value;
-                _activeBus.gameObject.SetActive(true);
-                _activeBus.Move(activeBusPosition.position).OnComplete(DispatchNewActiveBusArrivedEvent);
+                _activeBus.Move(activeBusPosition.position).OnComplete(_activeBus, DispatchNewActiveBusArrivedEvent);
             }
         }
 
@@ -67,13 +66,11 @@ namespace Game.Level
 
         public void ActivateNextBus()
         {
-
-
-            var oldActiveBus = _activeBus;
             _currentColorIndex++;
-
-            oldActiveBus.Move(busDisappearPosition.position).OnComplete(DispatchOldActiveBusLeftEvent);
-
+            var oldReservedBus = _reservedBus;
+            _reservedBus = activeBus;
+            _reservedBus.Move(busDisappearPosition.position).OnComplete(_reservedBus, DispatchOldActiveBusLeftEvent);
+            Debug.Log($"Bus {_reservedBus.name} left the station. Color: {_reservedBus.color}");
 
             if (_currentColorIndex >= busList.Count) //TO DO: end the game with animation
             {
@@ -82,8 +79,7 @@ namespace Game.Level
             }
 
             activeBus = _nextBus;
-            nextBus = _reservedBus;
-            _reservedBus = oldActiveBus;
+            nextBus = oldReservedBus;
         }
 
 

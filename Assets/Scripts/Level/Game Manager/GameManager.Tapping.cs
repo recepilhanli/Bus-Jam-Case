@@ -57,16 +57,16 @@ namespace Game.Level
 
             if (cell.isInPrimaryGrid) return;
 
-            Passenger passenger = cell.RemovePassenger();
+            Passenger passenger = cell.passenger;
             if (!passenger) return;
-
-
-            if (!cell.hasSpaceToMove)
+            else if (!cell.hasSpaceToMove)
             {
-                Debug.LogError($"Cell at {cell.position} has no space to move passenger: {passenger.name}");
+                Debug.LogError($"Cell at {cell.position} has no space to move the passenger");
                 onPlayerAttemptedToMovePassenger?.Invoke(passenger, false);
                 return;
             }
+            
+            cell.RemovePassenger();
 
             bool success = MovePassengerToPrimaryGrid(passenger);
             onPlayerAttemptedToMovePassenger?.Invoke(passenger, success);

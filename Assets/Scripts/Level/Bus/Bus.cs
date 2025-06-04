@@ -9,10 +9,12 @@ namespace Game.Level
 {
     public partial class Bus : MonoBehaviour, IPoolable
     {
+        public bool isActiveBus => GameManager.instance.activeBus == this;
 
         private void Awake()
         {
             InitPassengers();
+            InitMovement();
         }
 
         #region  Pooling
@@ -24,7 +26,12 @@ namespace Game.Level
         public void OnDespawn()
         {
             gameObject.SetActive(false);
+            for (int i = 0; i < passengers.Length; i++)
+            {
+                passengers[i] = null;
+            }
 
+            if (_currentTween.isAlive) _currentTween.Stop();
         }
 
         public void ReturnToPool() => PoolManager.GetPool(PoolTypes.Bus).ReturnToPool(this);

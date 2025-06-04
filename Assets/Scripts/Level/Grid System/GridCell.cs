@@ -57,17 +57,14 @@ namespace Game.Level
         {
             get
             {
+                if (position.y == attachedGrid.height - 1) return true; // If it's the last row, it can always move up
+
                 //check neighbors
                 foreach (var direction in _directions)
                 {
                     Vector2Int neighborPosition = _position + direction;
                     GridCell[,] cells = attachedGrid;
-                    if ((IsValidPosition(neighborPosition) && cells[neighborPosition.x, neighborPosition.y].isEmpty) ||
-                      position.y == attachedGrid.width - 1)
-                    {
-                        // If the neighbor cell is empty or if this is the last row, we can move
-                        return true;
-                    }
+                    if (IsValidPosition(neighborPosition) && cells[neighborPosition.x, neighborPosition.y].isEmpty)
                     {
                         return true;
                     }
@@ -114,7 +111,7 @@ namespace Game.Level
             cell.transform.localScale = new Vector3(grid.cellSize, 1, grid.cellSize);
             cell.isInPrimaryGrid = isInPrimaryGrid;
 
-            if (!isInPrimaryGrid) Passenger.GetFromPool(cell, ColorHelper.GetRandomColor());
+            if (!isInPrimaryGrid) Passenger.GetFromPool(cell, (ColorList)position.y); //temp
             return cell;
         }
         #endregion

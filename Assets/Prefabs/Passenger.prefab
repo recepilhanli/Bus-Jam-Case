@@ -249,10 +249,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5431543997218953197}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e663a27e85edf644682a296dc6d63aa7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4941033488517535706}
   m_SourcePrefab: {fileID: 100100000, guid: e663a27e85edf644682a296dc6d63aa7, type: 3}
 --- !u!1 &2519144147843391830 stripped
 GameObject:
@@ -297,29 +293,6 @@ MonoBehaviour:
   _renderer: {fileID: 3784403490805864549}
   _color: 0
   attachedCell: {fileID: 0}
-  agent: {fileID: 4941033488517535706}
---- !u!195 &4941033488517535706
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2519144147843391830}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!137 &3784403490805864549 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 1923111241245770850, guid: e663a27e85edf644682a296dc6d63aa7,

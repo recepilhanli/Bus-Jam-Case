@@ -16,17 +16,17 @@ namespace Game.Level
         public event Action<Passenger, Bus> onPassengerGetOnBus;
         public event Action<Passenger, bool> onPlayerAttemptedToMovePassenger; //bool - true: success, false: failure
 
-        private void DispatchOldActiveBusLeftEvent() //Prevent lambda allocation
+        private void DispatchOldActiveBusLeftEvent(Bus bus) //Prevent lambda allocation
         {
-            if (_reservedBus == null) return;
-            onOldActiveBusLeft?.Invoke(_reservedBus);
-            _reservedBus.ReturnSpawnPoint();
+            onOldActiveBusLeft?.Invoke(bus);
+            bus.onBusArrivedDestination?.Invoke();
+            bus.ReturnSpawnPoint();
         }
 
-        private void DispatchNewActiveBusArrivedEvent() //Prevent lambda allocation
+        private void DispatchNewActiveBusArrivedEvent(Bus bus) //Prevent lambda allocation
         {
-            if (_reservedBus == null) return;
-            onActiveBusArrived?.Invoke(_reservedBus);
+            onActiveBusArrived?.Invoke(bus);
+            bus.onBusArrivedDestination?.Invoke();
         }
 
     }

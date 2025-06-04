@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6269478066928002192}
   - component: {fileID: 180157348710143171}
   - component: {fileID: 5982179169581442083}
+  - component: {fileID: 785472674112425726}
   m_Layer: 6
   m_Name: GridCell
   m_TagString: Untagged
@@ -123,3 +124,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.0000002, z: 0.9241538}
   m_Center: {x: 0, y: -5.3891624e-16, z: -0.46207702}
+--- !u!208 &785472674112425726
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903230908065351234}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.545}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: -0.28}
+  m_TimeToStationary: 0.5

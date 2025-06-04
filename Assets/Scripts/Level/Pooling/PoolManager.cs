@@ -32,7 +32,7 @@ namespace Game.Level.Pooling
 
             _poolParent = new GameObject("[Object Pooling]").transform;
             _poolParent.gameObject.SetActive(true);
-            _poolParent.hideFlags = HideFlags.HideAndDontSave;
+            _poolParent.hideFlags = HideFlags.HideInInspector;
             Object.DontDestroyOnLoad(_poolParent.gameObject);
             SceneManager.activeSceneChanged += OnSceneChanged;
         }
