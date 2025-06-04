@@ -9,7 +9,16 @@ namespace Game.Level
 
     public class Grid : MonoBehaviour
     {
+        public static readonly Vector2Int[] directions = {
+                    new Vector2Int(1, 0), // Right
+                    new Vector2Int(-1, 0), // Left
+                    new Vector2Int(0, 1), // Up
+                    new Vector2Int(0, -1) // Down
+                };
+
         public GridCell[,] cells;
+
+
 
         public float cellSize = .5f; //uniform
         public Vector2 padding = Vector2.zero;
@@ -28,6 +37,11 @@ namespace Game.Level
             Init(width, height);
         }
 
+        public bool IsValidPosition(Vector2Int position)
+        {
+            return position.x >= 0 && position.x < width &&
+                   position.y >= 0 && position.y < height;
+        }
 
         public void Init(int width, int height)
         {

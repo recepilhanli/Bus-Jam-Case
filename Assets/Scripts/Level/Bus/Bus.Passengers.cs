@@ -22,11 +22,13 @@ namespace Game.Level
 
         public void ReleasePassengers()
         {
-            foreach (var passenger in passengers)
+            for (int i = 0; i < passengers.Length; i++)
             {
+                var passenger = passengers[i];
                 if (passenger != null)
                 {
                     passenger.ReturnToPool();
+                    passengers[i] = null;
                 }
             }
 
@@ -48,10 +50,11 @@ namespace Game.Level
 
         private void OnPassengerGetOn(Passenger passenger)
         {
-            _totalPassengersInBus++; 
+            _totalPassengersInBus++;
             Debug.Log($"Passenger {passenger.name} got on the bus. Total passengers: {_totalPassengersInBus}/{MAX_PASSENGERS}");
             Debug.Assert(GameManager.instance.activeBus == this, "This must called only for the active bus.");
             if (_totalPassengersInBus >= MAX_PASSENGERS) GameManager.instance.ActivateNextBus();
+            passenger.DisableMoveAnimation();
         }
 
 

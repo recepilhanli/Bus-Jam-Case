@@ -10,12 +10,7 @@ namespace Game.Level
 
     public sealed class GridCell : MonoCached<GridCell>, IPoolable
     {
-        private static readonly Vector2Int[] _directions = {
-                    new Vector2Int(1, 0), // Right
-                    new Vector2Int(-1, 0), // Left
-                    new Vector2Int(0, 1), // Up
-                    new Vector2Int(0, -1) // Down
-                };
+        private static Vector2Int[] _directions => Grid.directions;
 
         public bool isObstacle = false;
         public bool isInPrimaryGrid = false;
@@ -64,21 +59,14 @@ namespace Game.Level
                 {
                     Vector2Int neighborPosition = _position + direction;
                     GridCell[,] cells = attachedGrid;
-                    if (IsValidPosition(neighborPosition) && cells[neighborPosition.x, neighborPosition.y].isEmpty)
-                    {
-                        return true;
-                    }
+
+                    if (attachedGrid.IsValidPosition(neighborPosition) && cells[neighborPosition.x, neighborPosition.y].isEmpty) return true;
                 }
 
                 return false;
             }
         }
 
-        public bool IsValidPosition(Vector2Int position)
-        {
-            return position.x >= 0 && position.x < attachedGrid.width &&
-                   position.y >= 0 && position.y < attachedGrid.height;
-        }
 
 
         #region  Pooling

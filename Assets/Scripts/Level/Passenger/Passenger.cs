@@ -23,6 +23,7 @@ namespace Game.Level
         public void OnDespawn()
         {
             gameObject.SetActive(false);
+            UnmarkPassenger();
         }
 
         public void ReturnToPool() => PoolManager.GetPool(PoolTypes.Passenger).ReturnToPool(this);

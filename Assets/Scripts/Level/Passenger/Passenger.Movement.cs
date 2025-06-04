@@ -17,19 +17,22 @@ namespace Game.Level
         public Sequence MoveToCell(GridCell cell) //TO DO: Sample NavMesh for pathfinding
         {
             Sequence movementSequence = Sequence.Create()
-           .Chain(Tween.Position(transform, cell.worldPosition, DEFAULT_MOVE_DURATION, DEFAULT_MOVE_EASE));
+           .Chain(Tween.Position(transform, cell.worldPosition, DEFAULT_MOVE_DURATION, DEFAULT_MOVE_EASE))
+           .OnComplete(DisableMoveAnimation);
+
+            EnableMoveAnimation();
             return movementSequence;
         }
 
         public void MoveToActiveBus()
         {
+            Debug.Assert(activeBus != null, "Active bus is not assigned in GameManager.");
             if (activeBus && !activeBus.TryAddPassenger(this)) return;
-            Tween.Position(transform, GameManager.instance.activeBusPosition.position, DEFAULT_MOVE_DURATION, DEFAULT_MOVE_EASE).OnComplete(this, activeBus.onPassengerGetOnBus);
+            Tween.Position(transform, GameManager.instance.activeBusPosition.position, DEFAULT_MOVE_DURATION, DEFAULT_MOVE_EASE)
+            .OnComplete(this, activeBus.onPassengerGetOnBus);
+            EnableMoveAnimation();
             return;
         }
-
-
-
 
 
     }

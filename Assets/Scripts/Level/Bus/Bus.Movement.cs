@@ -42,6 +42,7 @@ namespace Game.Level
 
             _currentTween = Tween.ShakeLocalRotation(transform, _shakeStrength, 0.2f, 0.1f, true, Ease.InOutSine, cycles: -1);
         }
+        
 
         public void ReturnSpawnPoint()
         {

@@ -55,23 +55,35 @@ namespace Game.Level
         {
             GridCell cell = GridCell.GetActualType(gameObject);
 
-            if (cell.isInPrimaryGrid) return;
+            if (cell.isInPrimaryGrid)
+            {
+                Debug.LogWarning($"Tapped on primary grid cell at {cell.position}. This cell is not tappable.");
+                return;
+            }
 
             Passenger passenger = cell.passenger;
-            if (!passenger) return;
+            if (!passenger)
+            {
+                Debug.LogWarning($"Tapped on empty cell at {cell.position}. No passenger to move.");
+                return;
+            }
+
             else if (!cell.hasSpaceToMove)
             {
                 Debug.LogError($"Cell at {cell.position} has no space to move the passenger");
                 onPlayerAttemptedToMovePassenger?.Invoke(passenger, false);
                 return;
             }
-            
-            cell.RemovePassenger();
 
             bool success = MovePassengerToPrimaryGrid(passenger);
-            onPlayerAttemptedToMovePassenger?.Invoke(passenger, success);
+            if (success)
+            {
+                cell.RemovePassenger();
+                CheckSecondaryGridNeighbourSpace(cell.position);
+            }
 
-            Debug.Assert(cell != null, $"Passenger not found for GameObject: {gameObject.name}");
+
+            onPlayerAttemptedToMovePassenger?.Invoke(passenger, success);
         }
 
     }
