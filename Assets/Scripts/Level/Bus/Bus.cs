@@ -21,6 +21,7 @@ namespace Game.Level
         public void OnSpawn()
         {
             gameObject.SetActive(true);
+            transform.rotation = Quaternion.identity;
         }
 
         public void OnDespawn()

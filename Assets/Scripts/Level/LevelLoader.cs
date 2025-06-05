@@ -25,11 +25,12 @@ namespace Game.Level
         private static int _currentLevelIndex = 0;
         private static bool _isInitialized = false;
 
+        public static LevelContainer[] levelContainers => _levelContainers;
         private static LevelContainer[] _levelContainers;
 
         public static LevelContainer currentLevel => GetCurrentLevel();
         public static LevelContainer nextLevel => GetNextLevel();
-        
+
         public static bool isInitialized => _isInitialized;
 
 
@@ -91,7 +92,9 @@ namespace Game.Level
 
             _currentLevel++;
 
-            Addressables.Release(_levelContainers[_currentLevelIndex]); // Release the previous level container
+            // Release the previous level container
+            Addressables.Release(currentLevel);
+            _levelContainers[_currentLevelIndex] = null;
             _currentLevelIndex++;
 
             if (_currentLevelIndex >= _levelContainers.Length) _currentLevelIndex = 0;

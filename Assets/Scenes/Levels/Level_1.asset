@@ -25,4 +25,4 @@ MonoBehaviour:
     passengers: []
     obstacles: []
   busData:
-    buses: 
+    buses: 03000000020000000100000000000000

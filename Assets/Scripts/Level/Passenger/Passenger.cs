@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Game.Level.Pooling;
 using Game.Utils;
+using PrimeTween;
 using UnityEngine;
 
 namespace Game.Level
@@ -18,12 +19,14 @@ namespace Game.Level
         public void OnSpawn()
         {
             gameObject.SetActive(true);
+            transform.rotation = Quaternion.identity;
         }
 
         public void OnDespawn()
         {
             gameObject.SetActive(false);
             transform.SetParent(PoolManager.poolParent, true);
+            Tween.StopAll(transform);
             UnmarkPassenger();
         }
 

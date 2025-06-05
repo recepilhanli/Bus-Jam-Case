@@ -11,13 +11,23 @@ namespace Game.OnlyEditor
     {
 
         private Vector2 _scrollPosition;
+        private PoolTypes[] _poolTypes;
+        private PoolTypes _selectedPoolType = PoolTypes.Unkown;
+
+
 
         [MenuItem("Debug/Pool Manager")]
         private static void Init()
         {
-            PoolManagerEditor window = (PoolManagerEditor)EditorWindow.GetWindow(typeof(PoolManagerEditor));
+            PoolManagerEditor window = (PoolManagerEditor)GetWindow(typeof(PoolManagerEditor));
             window.titleContent = new GUIContent("Pool Manager");
             window.Show();
+        }
+
+        private void OnEnable()
+        {
+            _scrollPosition = Vector2.zero;
+            _poolTypes = (PoolTypes[])System.Enum.GetValues(typeof(PoolTypes));
         }
 
 
@@ -31,19 +41,21 @@ namespace Game.OnlyEditor
 
             EditorGUILayout.HelpBox("This window shows the current state of the object pools in the game.", MessageType.Info);
             EditorGUILayout.Space();
+            ListPoolTypes();
+        }
 
-            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-            foreach (PoolTypes poolType in System.Enum.GetValues(typeof(PoolTypes)))
-            {
-                if (poolType == PoolTypes.Unkown) continue;
-                DrawPoolType(poolType);
-            }
-            EditorGUILayout.EndScrollView();
-
+        private void ListPoolTypes()
+        {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Select Pool Type:", GUILayout.Width(120));
+            _selectedPoolType = (PoolTypes)EditorGUILayout.EnumPopup(_selectedPoolType);
+            EditorGUILayout.EndHorizontal();
+            if (_selectedPoolType != PoolTypes.Unkown) DrawPoolType(_selectedPoolType);
         }
 
         private void DrawPoolType(PoolTypes poolType)
         {
+            _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
             GUILayout.Label(poolType.ToString(), EditorStyles.boldLabel);
             EditorGUILayout.Space();
 
@@ -74,7 +86,7 @@ namespace Game.OnlyEditor
             }
 
             EditorGUILayout.EndVertical();
-            EditorGUILayout.Space();
+            EditorGUILayout.EndScrollView();
         }
 
     }

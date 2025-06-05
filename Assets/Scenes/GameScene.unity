@@ -171,6 +171,7 @@ MonoBehaviour:
   spacing: {x: 0.5, y: 0}
   width: 5
   height: 1
+  initOnAwake: 0
 --- !u!4 &28575478
 Transform:
   m_ObjectHideFlags: 0
@@ -3099,6 +3100,7 @@ MonoBehaviour:
   spacing: {x: 1, y: 1}
   width: 4
   height: 5
+  initOnAwake: 0
 --- !u!4 &887170654
 Transform:
   m_ObjectHideFlags: 0
@@ -4013,7 +4015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f251422a89763f7479c7a8a874c72264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 0}
+  _canvasGroup: {fileID: 303362311}
 --- !u!1 &1355191440
 GameObject:
   m_ObjectHideFlags: 0

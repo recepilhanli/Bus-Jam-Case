@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game.Data;
 using Game.Utils;
 using UnityEngine;
 
@@ -83,14 +84,36 @@ namespace Game.Level
         }
 
 
-        private void InitBuses()
-        {
-            _activeBus = Bus.GetFromPool(activeBusPosition.position, busList[0]);
 
-            if (busList.Count > 1) _nextBus = Bus.GetFromPool(nextBusPosition.position, busList[1]);
+        private void LoadBuses(in BusData data)
+        {
+            busList.Clear();
+            busList.AddRange(data.buses);
+            _currentColorIndex = 0;
+
+            if (busList.Count == 0)
+            {
+                Debug.LogWarning("No buses found in the bus list. Please check your LevelData -> BusData configuration.");
+                return;
+            }
+
+            if (_activeBus)
+            {
+                activeBus.color = busList[_currentColorIndex];
+                activeBus.transform.position = activeBusPosition.position;
+            }
+            else activeBus = Bus.GetFromPool(activeBusPosition.position, busList[_currentColorIndex]);
+
+            if (_nextBus && busList.Count > 1)
+            {
+                nextBus.color = busList[_currentColorIndex + 1];
+                nextBus.transform.position = nextBusPosition.position;
+            }
+            else if (busList.Count > 1) _nextBus = Bus.GetFromPool(nextBusPosition.position, busList[_currentColorIndex + 1]);
             else _nextBus = Bus.GetFromPool(busSpawnPosition.position, ColorList.White);
 
-            if (busList.Count > 2) _reservedBus = Bus.GetFromPool(busDisappearPosition.position, busList[2]);
+            if (_reservedBus && busList.Count > 2) _reservedBus.color = busList[_currentColorIndex + 2];
+            else if (busList.Count > 2) _reservedBus = Bus.GetFromPool(busSpawnPosition.position, busList[_currentColorIndex + 2]);
             else _reservedBus = Bus.GetFromPool(busSpawnPosition.position, ColorList.White);
 
             _activeBus.ShakeBus();

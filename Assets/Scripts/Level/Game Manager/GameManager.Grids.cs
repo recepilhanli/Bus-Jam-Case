@@ -14,7 +14,6 @@ namespace Game.Level
         private void InitGrids()
         {
             onActiveBusArrived += CheckPrimaryGrid;
-            CheckSecondaryGridFrontLine();
         }
 
         private void CheckPrimaryGrid(Bus arrivedBus)

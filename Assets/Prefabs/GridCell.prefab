@@ -101,6 +101,7 @@ MonoBehaviour:
   isObstacle: 0
   isInPrimaryGrid: 0
   cellCollider: {fileID: 5982179169581442083}
+  navMeshObstacle: {fileID: 785472674112425726}
   _position: {x: 0, y: 0}
   _passenger: {fileID: 0}
 --- !u!65 &5982179169581442083
@@ -134,7 +135,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.545}
+  m_Extents: {x: 0.125, y: 0.125, z: 0.375}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1

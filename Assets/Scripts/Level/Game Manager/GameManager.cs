@@ -16,7 +16,6 @@ namespace Game.Level
         private async UniTaskVoid Start()
         {
             InitTapping();
-            InitBuses();
             await InitLevels();
             InitGrids();
         }
@@ -31,7 +30,9 @@ namespace Game.Level
         public void Reset()
         {
             _currentColorIndex = 0;
-            
+            _nextBus = null;
+            _activeBus = null;
+            _reservedBus = null;
         }
 
         [ContextMenu("Return to Home")]

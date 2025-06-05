@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Game.Data;
@@ -24,14 +25,13 @@ namespace Game.Level
             }
 
             onLevelCompleted += () => CompleteLevelUI.enable = true;
-            InitLevel(currentLevel);
+            InitLevelContainer(currentLevel);
         }
 
         public void GetNextLevel()
         {
             PoolManager.ResetAllPools();
             Reset();
-            InitBuses();
 
             LevelContainer nextLevel = LevelLoader.nextLevel;
             if (nextLevel == null)
@@ -42,10 +42,21 @@ namespace Game.Level
 
             _ = LevelLoader.LoadNextLevelAsync(); //Lazy loading next level
 
-            InitLevel(nextLevel);
+            InitLevelContainer(nextLevel);
         }
 
-        private void InitLevel(LevelContainer levelContainer)
+        public void LoadLevel(LevelContainer levelContainer)
+        {
+            Debug.Assert(levelContainer != null, "Level container cannot be null when loading a level.");
+
+            PoolManager.ResetAllPools();
+            Reset();
+
+            InitLevelContainer(levelContainer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void InitLevelContainer(LevelContainer levelContainer)
         {
             if (levelContainer == null)
             {
@@ -55,6 +66,9 @@ namespace Game.Level
 
             primaryGrid.Init(levelContainer.primaryGrid);
             secondaryGrid.Init(levelContainer.secondaryGrid);
+            LoadBuses(in levelContainer.busData);
+
+            CheckSecondaryGridFrontLine();
         }
 
     }
