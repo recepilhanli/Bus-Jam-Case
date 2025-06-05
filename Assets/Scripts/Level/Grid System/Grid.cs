@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Game.Data;
 using UnityEngine;
 
 
@@ -19,12 +20,12 @@ namespace Game.Level
         public GridCell[,] cells;
 
 
-
         public float cellSize = .5f; //uniform
         public Vector2 padding = Vector2.zero;
         public Vector2 spacing = Vector2.zero;
         public int width = 10;
         public int height = 10;
+        [SerializeField] private bool initOnAwake = false;
 
         private bool _wasInitialized = false;
 
@@ -34,7 +35,7 @@ namespace Game.Level
 
         private void Awake()
         {
-            Init(width, height);
+            if (initOnAwake) Init(width, height);
         }
 
         public bool IsValidPosition(Vector2Int position)
@@ -55,6 +56,28 @@ namespace Game.Level
             }
             _wasInitialized = true;
         }
+
+
+        public void Init(GridData data)
+        {
+            if (data == null)
+            {
+                Debug.LogError("GridData is null. Cannot initialize grid.");
+                return;
+            }
+
+            width = data.gridSize.x;
+            height = data.gridSize.y;
+            cellSize = data.cellSize;
+            padding = data.padding;
+            spacing = data.spacing;
+
+            Init(width, height);
+        }
+
+
+
+
 
         public Vector3 GetCellWorldPosition(in Vector2Int position)
         {

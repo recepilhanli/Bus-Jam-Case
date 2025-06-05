@@ -22,6 +22,11 @@ namespace Game
 
         protected virtual void Awake()
         {
+            FindType();
+        }
+
+        protected void FindType()
+        {
             if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);

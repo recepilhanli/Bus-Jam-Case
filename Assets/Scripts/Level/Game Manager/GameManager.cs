@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Game.UI;
+
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Game.Level
 {
@@ -12,14 +13,12 @@ namespace Game.Level
 
         public const int SCENE_HOME_INDEX = 0;
 
-        private void Start()
+        private async UniTaskVoid Start()
         {
             InitTapping();
             InitBuses();
+            await InitLevels();
             InitGrids();
-
-            //Temp
-            onLevelCompleted += () => CompleteLevelUI.enable = true;
         }
 
 
@@ -32,12 +31,14 @@ namespace Game.Level
         public void Reset()
         {
             _currentColorIndex = 0;
+            
         }
 
+        [ContextMenu("Return to Home")]
         public void ReturnToHome()
         {
             Reset();
-            SceneManager.LoadScene(SCENE_HOME_INDEX);
+            SceneHelper.LoadScene(SCENE_HOME_INDEX);
         }
 
 

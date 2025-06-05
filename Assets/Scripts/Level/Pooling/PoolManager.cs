@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Game.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -34,15 +35,15 @@ namespace Game.Level.Pooling
             _poolParent.gameObject.SetActive(true);
             _poolParent.hideFlags = HideFlags.HideInInspector;
             Object.DontDestroyOnLoad(_poolParent.gameObject);
-            SceneManager.activeSceneChanged += OnSceneChanged;
+            SceneHelper.onRequestSceneLoad += OnSceneChanged;
         }
 
-        private static void OnSceneChanged(Scene oldScene, Scene newScene)
+        private static void OnSceneChanged(Scene newScene)
         {
-            if (oldScene.buildIndex == GAME_SCENE_BUILD_INDEX) ResetAllPools();
+            if (newScene.buildIndex != GAME_SCENE_BUILD_INDEX) ResetAllPools();
         }
 
-        private static void ResetAllPools()
+        public static void ResetAllPools()
         {
             foreach (var pool in _pools.Values)
             {
@@ -88,6 +89,8 @@ namespace Game.Level.Pooling
         public static PoolTypes GetPoolType<T>() where T : MonoBehaviour
         {
             if (typeof(T) == typeof(Passenger)) return PoolTypes.Passenger;
+            else if (typeof(T) == typeof(Bus)) return PoolTypes.Bus;
+            else if (typeof(T) == typeof(GridCell)) return PoolTypes.GridCell;
             return PoolTypes.Unkown;
         }
 

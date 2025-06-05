@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Level.Pooling;
 using UnityEngine;
 
 
-namespace Game.Level.Pooling
+namespace Game.Data
 {
 
     [CreateAssetMenu(fileName = "New Pool Container", menuName = "Game/Pooling/PoolContainer")]

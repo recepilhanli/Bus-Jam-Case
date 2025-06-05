@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Game.Data;
 using UnityEngine;
 
 
@@ -9,6 +10,9 @@ namespace Game.Level.Pooling
 {
     public sealed class Pool
     {
+        public Queue<IPoolable> PooledObjects => _pooledObjects;
+        public HashSet<IPoolable> ActiveObjects => _activeObjects;
+        
         private Queue<IPoolable> _pooledObjects;
         private HashSet<IPoolable> _activeObjects;
         public GameObject prefab;

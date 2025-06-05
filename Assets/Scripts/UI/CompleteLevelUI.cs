@@ -30,6 +30,7 @@ namespace Game.UI
         public void NextLevel()
         {
             enable = false;
+            GameManager.instance.GetNextLevel();
         }
 
         public void ReturnToHome()

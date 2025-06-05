@@ -85,7 +85,7 @@ namespace Game.Level
                 return;
             }
 
-            bool success = MovePassengerToPrimaryGrid(passenger);
+            bool success = TryMovePassengerToPrimaryGrid(passenger);
             if (success)
             {
                 cell.RemovePassenger();

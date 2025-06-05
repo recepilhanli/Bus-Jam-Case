@@ -17,8 +17,14 @@ namespace Game.Level
         /// </summary>
         /// <param name="passenger"> The passenger to be moved.</param>
         /// <returns> True if the passenger was successfully moved, false otherwise.</returns>
-        public bool MovePassengerToPrimaryGrid(Passenger passenger)
+        public bool TryMovePassengerToPrimaryGrid(Passenger passenger)
         {
+            if(_activeBus == null)
+            {
+                Debug.LogError("Active bus is not assigned.");
+                return false;
+            }
+
             var passengerColor = passenger.Color;
 
             if (activeBusColor == passengerColor)

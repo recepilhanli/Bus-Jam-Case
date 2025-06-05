@@ -74,6 +74,7 @@ namespace Game.Level
             {
                 onLevelCompleted?.Invoke();
                 _currentColorIndex = 0; // Reset to loop through colors
+                Debug.Log("All buses have left. Level completed.");
                 return;
             }
 
