@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.UI;
-
+using PrimeTween;
 using UnityEngine;
 
 namespace Game.Level
@@ -18,6 +18,12 @@ namespace Game.Level
             InitTapping();
             await InitLevels();
             InitGrids();
+
+#if !UNITY_EDITOR
+            PrimeTweenConfig.warnEndValueEqualsCurrent = false;
+            PrimeTweenConfig.warnTweenOnDisabledTarget = false;
+#endif
+
         }
 
 
