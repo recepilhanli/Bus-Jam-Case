@@ -143,7 +143,6 @@ namespace Game.Level
             Gizmos.DrawLine(firstColumn, lastColumn);
             Gizmos.DrawLine(firstRow, lastRow);
         }
-    }
 #endif
-
+    }
 }
