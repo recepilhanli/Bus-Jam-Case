@@ -15,11 +15,11 @@ namespace Game.Level
 
 
         #region Pooling
-        public void OnSpawn(in Vector3 position, in Quaternion rotation)
+        public void OnSpawn()
         {
             gameObject.SetActive(true);
-            transform.SetPositionAndRotation(position, rotation);
         }
+
         public void OnDespawn()
         {
             gameObject.SetActive(false);
@@ -39,6 +39,7 @@ namespace Game.Level
             var passenger = PoolManager.GetObject<Passenger>(PoolTypes.Passenger, in position);
             passenger.Color = color;
             cell.SetPassenger(passenger);
+            passenger.transform.position = position;
             return passenger;
         }
         #endregion

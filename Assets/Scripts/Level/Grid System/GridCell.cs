@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Game.Level.Pooling;
 using Game.Utils;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Game.Level
 {
@@ -15,9 +16,11 @@ namespace Game.Level
         public bool isObstacle = false;
         public bool isInPrimaryGrid = false;
         public Collider cellCollider;
+        public NavMeshObstacle navMeshObstacle;
 
         [Header("Read-Only Values")]
         [SerializeField] private Vector2Int _position;
+
         [SerializeField] private Passenger _passenger;
 
         public Vector2Int position { get => _position; }
@@ -71,10 +74,9 @@ namespace Game.Level
 
         #region  Pooling
 
-        public void OnSpawn(in Vector3 position, in Quaternion rotation = default)
+        public void OnSpawn()
         {
             gameObject.SetActive(true);
-            transform.position = position;
         }
 
         public void OnDespawn()
@@ -96,8 +98,10 @@ namespace Game.Level
             GridCell cell = PoolManager.GetObject<GridCell>(PoolTypes.GridCell, in worldPosition);
             Debug.Assert(cell != null, "Failed to get GridCell from pool.");
             cell._position = position;
-            cell.transform.localScale = new Vector3(grid.cellSize, 1, grid.cellSize);
             cell.isInPrimaryGrid = isInPrimaryGrid;
+
+            cell.transform.position = worldPosition;
+            cell.transform.localScale = new Vector3(grid.cellSize, 1, grid.cellSize);
 
             if (!isInPrimaryGrid) Passenger.GetFromPool(cell, (ColorList)position.y); //temp
             return cell;

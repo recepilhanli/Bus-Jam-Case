@@ -66,7 +66,7 @@ namespace Game.Level.Pooling
         {
             if (_pools.TryGetValue(poolType, out var pool))
             {
-                return pool.GetObject(in position, in rotation);
+                return pool.GetObject();
             }
             Debug.LogError($"Pool type {poolType} not found.");
             return null;

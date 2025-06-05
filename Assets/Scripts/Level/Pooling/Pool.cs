@@ -35,19 +35,19 @@ namespace Game.Level.Pooling
         }
 
 
-        public IPoolable GetObject(in Vector3 position, in Quaternion rotation)
+        public IPoolable GetObject()
         {
             if (_pooledObjects.Count > 0)
             {
                 IPoolable obj = _pooledObjects.Dequeue();
                 _activeObjects.Add(obj);
-                obj.OnSpawn(position, rotation);
+                obj.OnSpawn();
                 return obj;
             }
 
-            IPoolable newObj = Create(in position, in rotation);
+            IPoolable newObj = Create();
             _activeObjects.Add(newObj);
-            newObj.OnSpawn(position, rotation);
+            newObj.OnSpawn();
             return newObj;
         }
 
@@ -64,7 +64,7 @@ namespace Game.Level.Pooling
             _activeObjects.Remove(obj);
         }
 
-        private IPoolable Create(in Vector3 position, in Quaternion rotation)
+        private IPoolable Create()
         {
             GameObject instance = UnityEngine.Object.Instantiate(prefab);
             IPoolable poolable = instance.GetComponent<IPoolable>();
@@ -74,7 +74,7 @@ namespace Game.Level.Pooling
                 return null;
             }
             instance.transform.SetParent(PoolManager.poolParent, false);
-            poolable.OnSpawn(position, rotation);
+            poolable.OnSpawn();
             return poolable;
         }
 

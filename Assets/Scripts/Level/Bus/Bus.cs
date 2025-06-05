@@ -18,7 +18,7 @@ namespace Game.Level
         }
 
         #region  Pooling
-        public void OnSpawn(in Vector3 position, in Quaternion rotation = default)
+        public void OnSpawn()
         {
             gameObject.SetActive(true);
         }
