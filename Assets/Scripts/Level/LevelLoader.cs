@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Game.Data;
+using Game.Player;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -20,8 +21,6 @@ namespace Game.Level
         public const string LEVEL_CONTAINER_ADDRESS = "Levels/";
         public const int MAX_LEVEL_COUNT = 5; //Maximum number of levels in ram
 
-
-        private static int _currentLevel = 0;
         private static int _currentLevelIndex = 0;
         private static bool _isInitialized = false;
 
@@ -34,10 +33,9 @@ namespace Game.Level
         public static bool isInitialized => _isInitialized;
 
 
-        public static async UniTask InitAsync(int startLevel)
+        public static async UniTask InitAsync()
         {
             if (isInitialized) return;
-            _currentLevel = startLevel;
             _levelContainers = new LevelContainer[MAX_LEVEL_COUNT];
             await LoadLevelsAsync();
         }
@@ -47,7 +45,7 @@ namespace Game.Level
 
             for (int i = 0; i < MAX_LEVEL_COUNT; i++)
             {
-                var levelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{i}.asset";
+                var levelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{i + PlayerStats.currentLevel}.asset";
                 var levelContainer = await Addressables.LoadAssetAsync<LevelContainer>(levelAddress).Task;
                 if (levelContainer != null)
                 {
@@ -90,7 +88,7 @@ namespace Game.Level
                 return;
             }
 
-            _currentLevel++;
+            PlayerStats.currentLevel++;
 
             // Release the previous level container
             Addressables.Release(currentLevel);
@@ -99,7 +97,7 @@ namespace Game.Level
 
             if (_currentLevelIndex >= _levelContainers.Length) _currentLevelIndex = 0;
 
-            var nextLevelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{_currentLevel}";
+            var nextLevelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{PlayerStats.currentLevel}";
             var nextLevelContainer = await Addressables.LoadAssetAsync<LevelContainer>(nextLevelAddress).Task;
             if (nextLevelContainer != null) _levelContainers[_currentLevelIndex - 1] = nextLevelContainer;
             else Debug.LogWarning($"Next level not found at address: {nextLevelAddress}");

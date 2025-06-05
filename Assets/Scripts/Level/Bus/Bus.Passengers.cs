@@ -18,6 +18,21 @@ namespace Game.Level
         [Tooltip("Read-Only")][SerializeField] Passenger[] passengers = null;
         private int _totalPassengersInBus = 0;
 
+        public int totalPassengersInBus => _totalPassengersInBus;
+        public int availablePassengerSlots
+        {
+            get
+            {
+                int emptySlots = 0;
+                for (int i = 0; i < passengers.Length; i++)
+                {
+                    if (passengers[i] == null) emptySlots++;
+                }
+                return emptySlots;
+            }
+        }
+        public bool hasSpace => availablePassengerSlots > 0;
+
         private void InitPassengers()
         {
             passengers = new Passenger[MAX_PASSENGERS];

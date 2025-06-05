@@ -18,11 +18,11 @@ MonoBehaviour:
     spacing: {x: 0.5, y: 0}
     cellSize: 1
   secondaryGrid:
-    gridSize: {x: 3, y: 4}
-    padding: {x: 1, y: 0}
+    gridSize: {x: 4, y: 5}
+    padding: {x: 0, y: 0}
     spacing: {x: 1, y: 1}
     cellSize: 1
     passengers: []
     obstacles: []
   busData:
-    buses: 03000000020000000100000000000000
+    buses: 0400000003000000020000000100000000000000

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,12 @@ namespace Game.Player
 
     public static class PlayerStats
     {
+
+        public static event Action<int> onLevelNumberChanged;
+        public static event Action<int> onCoinsChanged;
+        public static event Action<int> onRemainingLivesChanged;
+
+
         private static int _currentLevel = 1;
         private static int _coins = 0;
         private static int _remainingLives = 3;
@@ -22,6 +29,7 @@ namespace Game.Player
             {
                 _remainingLives = value;
                 if (_remainingLives < 0) _remainingLives = 0;
+                onRemainingLivesChanged?.Invoke(value);
             }
         }
 
@@ -32,6 +40,7 @@ namespace Game.Player
             {
                 _currentLevel = value;
                 if (_currentLevel < 0) _currentLevel = 0;
+                onLevelNumberChanged?.Invoke(value);
             }
         }
 
@@ -43,6 +52,7 @@ namespace Game.Player
             {
                 _coins = value;
                 if (_coins < 0) _coins = 0;
+                onCoinsChanged?.Invoke(value);
             }
         }
 

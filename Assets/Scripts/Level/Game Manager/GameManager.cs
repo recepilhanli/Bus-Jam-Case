@@ -18,6 +18,7 @@ namespace Game.Level
             InitTapping();
             await InitLevels();
             InitGrids();
+            InitBuses();
 
 #if !UNITY_EDITOR
             PrimeTweenConfig.warnEndValueEqualsCurrent = false;
@@ -36,6 +37,7 @@ namespace Game.Level
         public void Reset()
         {
             _currentColorIndex = 0;
+            _wasActiveBusArrived = false;
             _nextBus = null;
             _activeBus = null;
             _reservedBus = null;

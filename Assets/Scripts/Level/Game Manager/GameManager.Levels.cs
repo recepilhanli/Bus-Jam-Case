@@ -17,7 +17,7 @@ namespace Game.Level
 
         private async UniTask InitLevels()
         {
-            await LevelLoader.InitAsync(0); //Temp Will be changed with WaitUntil LevelLoader is ready
+            await LevelLoader.InitAsync(); 
             LevelContainer currentLevel = LevelLoader.currentLevel;
             if (currentLevel == null)
             {
@@ -27,7 +27,7 @@ namespace Game.Level
 
             onLevelCompleted += () => CompleteLevelUI.enable = true;
             onLevelFailed += () => LevelLossUI.enable = true;
-            
+
             InitLevelContainer(currentLevel);
         }
 
@@ -39,7 +39,8 @@ namespace Game.Level
             LevelContainer nextLevel = LevelLoader.nextLevel;
             if (nextLevel == null)
             {
-                Debug.LogError("Next level is null. Cannot initialize next level.");
+                Debug.LogError("Next level is null. Returning to home.");
+                ReturnToHome();
                 return;
             }
 
@@ -79,6 +80,11 @@ namespace Game.Level
             PlayerStats.remainingLives--;
             //TO DO: Implenent remaining lives system
             if (PlayerStats.remainingLives > 0) LoadLevel(LevelLoader.currentLevel);
+            else
+            {
+                Debug.Log("No remaining lives. Returning to home.");
+                ReturnToHome();
+            }
         }
 
     }

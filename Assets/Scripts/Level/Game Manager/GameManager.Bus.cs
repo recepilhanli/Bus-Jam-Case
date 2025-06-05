@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.Data;
@@ -27,6 +28,9 @@ namespace Game.Level
         private Bus _nextBus;
         private Bus _reservedBus;
         private int _currentColorIndex = 0;
+
+        private bool _wasActiveBusArrived = false;
+
 
         public Bus activeBus
         {
@@ -60,6 +64,23 @@ namespace Game.Level
                 _nextBus.transform.position = busSpawnPosition.position;
                 _nextBus.color = busList[_currentColorIndex + 1];
                 _nextBus.Move(nextBusPosition.position);
+            }
+        }
+
+        private void InitBuses()
+        {
+            onActiveBusArrived += OnActiveBusArrived;
+            onOldActiveBusLeft += OnOldActiveBusLeft;
+        }
+
+        private void OnOldActiveBusLeft(Bus bus) => _wasActiveBusArrived = false;
+        private void OnActiveBusArrived(Bus bus)
+        {
+            _wasActiveBusArrived = true;
+            if (!primaryGrid.hasSpace)
+            {
+                Debug.LogWarning($"Primary grid has no space for bus: {bus.name}. Level failed.");
+                onLevelFailed?.Invoke();
             }
         }
 
@@ -117,6 +138,7 @@ namespace Game.Level
             else _reservedBus = Bus.GetFromPool(busSpawnPosition.position, ColorList.White);
 
             _activeBus.ShakeBus();
+            _wasActiveBusArrived = true;
         }
 
     }

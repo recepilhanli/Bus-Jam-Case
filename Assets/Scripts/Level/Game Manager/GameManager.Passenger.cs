@@ -20,7 +20,7 @@ namespace Game.Level
         /// <returns> True if the passenger was successfully moved, false otherwise.</returns>
         public bool TryMovePassengerToPrimaryGrid(Passenger passenger)
         {
-            if(_activeBus == null)
+            if (_activeBus == null)
             {
                 Debug.LogError("Active bus is not assigned.");
                 return false;
@@ -45,8 +45,13 @@ namespace Game.Level
 
             passenger.MoveToCell(cell);
             cell.SetPassenger(passenger);
- 
-            if (!primaryGrid.hasSpace) onLevelFailed?.Invoke();
+
+            if (!primaryGrid.hasSpace && _wasActiveBusArrived && activeBus.hasSpace)
+            {
+                onLevelFailed?.Invoke();
+                Debug.LogWarning("Primary grid has no space, but the active bus has space. Level failed.");
+            }
+            
             return true;
         }
 
