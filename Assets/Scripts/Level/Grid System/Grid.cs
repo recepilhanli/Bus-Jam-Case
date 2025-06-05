@@ -30,8 +30,8 @@ namespace Game.Level
         private bool _wasInitialized = false;
 
         public bool wasInitialized => _wasInitialized;
+        public bool hasSpace => GetEmptyCell() != null;
         public Vector3 origin => transform.position + new Vector3(padding.x, 0, padding.y);
-
 
         private void Awake()
         {

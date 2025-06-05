@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game.UI;
 using Game.Utils;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -44,6 +45,8 @@ namespace Game.Level
 
             passenger.MoveToCell(cell);
             cell.SetPassenger(passenger);
+ 
+            if (!primaryGrid.hasSpace) onLevelFailed?.Invoke();
             return true;
         }
 

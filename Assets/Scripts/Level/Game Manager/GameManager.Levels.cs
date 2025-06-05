@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Game.Data;
 using Game.Level.Pooling;
+using Game.Player;
 using Game.UI;
 using UnityEngine;
 
@@ -25,6 +26,8 @@ namespace Game.Level
             }
 
             onLevelCompleted += () => CompleteLevelUI.enable = true;
+            onLevelFailed += () => LevelLossUI.enable = true;
+            
             InitLevelContainer(currentLevel);
         }
 
@@ -69,6 +72,13 @@ namespace Game.Level
             LoadBuses(in levelContainer.busData);
 
             CheckSecondaryGridFrontLine();
+        }
+
+        public void RestartLevel()
+        {
+            PlayerStats.remainingLives--;
+            //TO DO: Implenent remaining lives system
+            if (PlayerStats.remainingLives > 0) LoadLevel(LevelLoader.currentLevel);
         }
 
     }
