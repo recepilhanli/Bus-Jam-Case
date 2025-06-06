@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.Utils;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -13,9 +15,12 @@ namespace Game.OnlyEditor
     public class EditorGridCell : MonoBehaviour
     {
 
+        
         public Vector2Int position;
         public ColorList _passengerColor;
         [SerializeField] private EditorCellType _cellType = EditorCellType.Empty;
+
+        private static GUIStyle _labelStyle;
 
 
         public EditorCellType cellType
@@ -30,6 +35,13 @@ namespace Game.OnlyEditor
         private void Awake()
         {
             gameObject.hideFlags = HideFlags.NotEditable | HideFlags.DontSaveInEditor;
+            
+            if (_labelStyle == null) _labelStyle = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 10,
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = Color.red },
+            };
         }
 
         private void OnDrawGizmos()
@@ -38,6 +50,7 @@ namespace Game.OnlyEditor
             DrawGizmos();
         }
 
+ 
         private Color GetGizmosColor()
         {
             switch (cellType)
@@ -59,12 +72,13 @@ namespace Game.OnlyEditor
         private void DrawGizmos()
         {
             //draw position as text
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 0.5f, $"({position.x}, {position.y})");
+            Handles.Label(transform.position + Vector3.up, $"({position.x}, {position.y})", _labelStyle);
+
 
             switch (cellType)
             {
                 case EditorCellType.Empty:
-                    Gizmos.DrawWireCube(transform.position, Vector3.one);
+                    Gizmos.DrawCube(transform.position, Vector3.one);
                     //draw text
                     break;
                 case EditorCellType.Obstacle:
@@ -72,11 +86,20 @@ namespace Game.OnlyEditor
                     break;
                 case EditorCellType.HasPasenger:
                     Gizmos.DrawMesh(LevelEditor.instance.PassengerMesh, transform.position, Quaternion.Euler(-90, 0, 0), Vector3.one);
+                    Gizmos.color = Color.gray;
+                    Gizmos.DrawCube(transform.position, Vector3.one / 2);
                     break;
                 case EditorCellType.Primary:
                     Gizmos.DrawWireCube(transform.position, Vector3.one);
                     break;
             }
+
+            if (Selection.activeGameObject == gameObject)
+            {
+                Handles.color = Color.yellow;
+                Handles.DrawSolidDisc(transform.position, Vector3.up, .85f);
+            }
+
         }
 
     }

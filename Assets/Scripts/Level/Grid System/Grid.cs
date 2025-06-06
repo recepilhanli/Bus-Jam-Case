@@ -120,21 +120,7 @@ namespace Game.Level
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(origin, 0.1f);
-
-            Gizmos.color = Color.green;
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    Vector3 cellPosition = GetCellWorldPosition(new Vector2Int(x, y));
-                    Gizmos.DrawWireCube(cellPosition, new Vector3(cellSize, 0.1f, cellSize));
-                }
-            }
-
-            //draw arrow to represnt grid direction (first column, last column, first row, last row)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 0.5f, $"Grid ({width}x{height})");
             Gizmos.color = Color.red;
             Vector3 firstColumn = GetCellWorldPosition(new Vector2Int(0, 0));
             Vector3 lastColumn = GetCellWorldPosition(new Vector2Int(width - 1, 0));

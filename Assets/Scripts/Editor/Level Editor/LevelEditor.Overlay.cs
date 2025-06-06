@@ -18,7 +18,6 @@ namespace Game.OnlyEditor
     public class LevelEditorOverlay : Overlay
     {
 
-
         private VisualElement _root;
 
         private ObjectField _selectedLevelContainerField;
@@ -43,7 +42,6 @@ namespace Game.OnlyEditor
             titleLabel.style.marginBottom = 10;
 
             EditorSceneManager.sceneOpened += OnSceneChanged;
-
 
             _selectedLevelContainerField = new ObjectField("Editing Level")
             {
@@ -73,10 +71,21 @@ namespace Game.OnlyEditor
 
 
                LevelContainer newLevelContainer = ScriptableObject.CreateInstance<LevelContainer>();
+
+               newLevelContainer.primaryGrid.cellSize = GridData.defaultPrimaryGrid.cellSize;
+               newLevelContainer.primaryGrid.gridSize = GridData.defaultPrimaryGrid.gridSize;
+               newLevelContainer.primaryGrid.padding = GridData.defaultPrimaryGrid.padding;
+               newLevelContainer.primaryGrid.spacing = GridData.defaultPrimaryGrid.spacing;
+
+               newLevelContainer.secondaryGrid.cellSize = GridData.defaultSecondaryGrid.cellSize;
+               newLevelContainer.secondaryGrid.gridSize = GridData.defaultSecondaryGrid.gridSize;
+               newLevelContainer.secondaryGrid.padding = GridData.defaultSecondaryGrid.padding;
+               newLevelContainer.secondaryGrid.spacing = GridData.defaultSecondaryGrid.spacing;
+
                AssetDatabase.CreateAsset(newLevelContainer, $"{LevelLoader.LEVEL_FOLDER}{LevelLoader.LEVEL_PREFIX}{lastLevelNumberInFolder + 1}.asset");
-                _levelEditor.selectedLevelContainer = newLevelContainer;
-                _selectedLevelContainerField.value = newLevelContainer;
-                
+               _levelEditor.selectedLevelContainer = newLevelContainer;
+               _selectedLevelContainerField.value = newLevelContainer;
+
                EditorUtility.FocusProjectWindow();
                AssetDatabase.SaveAssets();
            })
@@ -96,6 +105,7 @@ namespace Game.OnlyEditor
 
 
             if (SceneHelper.isGameScene || SceneHelper.isHomeScene) displayed = false;
+
             return _root;
 
         }
