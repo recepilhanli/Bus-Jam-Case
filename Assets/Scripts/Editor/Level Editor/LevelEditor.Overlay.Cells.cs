@@ -51,8 +51,6 @@ namespace Game.OnlyEditor
 
             _cellTypeField = new EnumField("Cell Type", _selectedCell?.cellType ?? EditorCellType.Empty);
 
-
-
             _editCellToggle.RegisterValueChangedCallback(evt =>
               {
                   _cellBottomOverlayRoot.style.display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
@@ -100,7 +98,7 @@ namespace Game.OnlyEditor
         {
             if (_selectedCell == null) return;
 
-            if (_selectedCell.cellType == EditorCellType.HasPasenger) ShowColors(true);
+            if (_selectedCell.cellType == EditorCellType.HasPassenger) ShowColors(true);
             else ShowColors(false);
 
             _editCellToggle.text = $"({_selectedCell.position.x}, {_selectedCell.position.y})";
@@ -133,7 +131,7 @@ namespace Game.OnlyEditor
                 Color color = colorType.ToColor();
                 _colorButtons[i] = new Button(() =>
                 {
-                    _selectedCell._passengerColor = colorType;
+                    _selectedCell.passengerColor = colorType;
                 })
                 {
                     text = "*",

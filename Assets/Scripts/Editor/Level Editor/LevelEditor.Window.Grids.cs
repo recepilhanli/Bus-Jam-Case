@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using Game.Data;
 using Game.Level;
 using UnityEditor;
@@ -10,88 +11,18 @@ using UnityEngine.UIElements;
 namespace Game.OnlyEditor
 {
 
-    public class EditGridsWindow : EditorWindow
+
+    public partial class LevelEditorWindow
     {
-        private static EditGridsWindow _instance = null;
-        private static LevelEditor _levelEditor => LevelEditor.instance;
-        private static LevelContainer _selectedLevelContainer => _levelEditor.selectedLevelContainer;
 
-        private GridData _primaryGridData = new();
-        private GridData _secondaryGridData = new();
+        private VisualElement _gridOverlayRoot;
 
-
-        [MenuItem("Window/Edit Grids")]
-        public static void ShowWindow()
+        private void CreateGridPanelContent()
         {
-            if (_instance != null)
-            {
-                _instance.Focus();
-                return;
-            }
 
-            _instance = GetWindow<EditGridsWindow>("Edit Grids");
-            _instance.minSize = new Vector2(300, 400);
-            _instance.maxSize = new Vector2(300, 400);
+            _gridOverlayRoot = CreateTitle("Edit Grids");
+            LevelEditor.onLevelContainerUpdated += UpdateGridData;
 
-            _levelEditor.onLevelContainerUpdated += _instance.UpdateGridData;
-
-            _instance.Show();
-        }
-
-
-        public void UpdateGridData()
-        {
-            if (_levelEditor == null)
-            {
-                Debug.LogError("LevelEditor instance is null. Cannot update grid data.");
-                DestroyInstance();
-                return;
-            }
-            if (_levelEditor.selectedLevelContainer == null)
-            {
-                _primaryGridData = GridData.defaultPrimaryGrid;
-                _secondaryGridData = GridData.defaultSecondaryGrid;
-                return;
-            }
-
-            GridData.Copy(_levelEditor.selectedLevelContainer.primaryGrid, _primaryGridData);
-            GridData.Copy(_levelEditor.selectedLevelContainer.secondaryGrid, _secondaryGridData);
-
-            Repaint();
-        }
-
-        public static void DestroyInstance()
-        {
-            if (_instance != null)
-            {
-                _instance.Close();
-                _instance = null;
-                _levelEditor.onLevelContainerUpdated -= _instance.UpdateGridData;
-            }
-        }
-
-        private void OnEnable()
-        {
-            UpdateGridData();
-
-            //Draw UI
-            var root = rootVisualElement;
-            root.style.flexDirection = FlexDirection.Column;
-            root.style.paddingLeft = 10;
-            root.style.paddingRight = 10;
-            root.style.paddingTop = 10;
-            root.style.paddingBottom = 10;
-            root.style.width = 300;
-            root.style.height = 400;
-            root.style.backgroundColor = new Color(0.1f, 0.1f, 0.1f, 1f);
-            root.style.borderLeftColor = Color.gray;
-            root.style.borderLeftWidth = 1;
-
-            Label titleLabel = new Label("Edit Grids");
-            titleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
-            titleLabel.style.fontSize = 20;
-            titleLabel.style.marginBottom = 10;
-            root.Add(titleLabel);
 
             // Primary Grid
             var primaryGridContainer = new VisualElement();
@@ -109,16 +40,10 @@ namespace Game.OnlyEditor
             secondaryGridContainer.style.borderBottomColor = Color.gray;
             secondaryGridContainer.style.borderBottomWidth = 1;
             root.Add(secondaryGridContainer);
-
             CreateGridElements(_secondaryGridData, secondaryGridContainer, "Secondary Grid");
-        }
 
-        private void SaveGrid(bool isPrimaryGrid, GridData data)
-        {
-            if (isPrimaryGrid)
-                _levelEditor.selectedLevelContainer.ChangePrimaryGrid(data);
-            else
-                _levelEditor.selectedLevelContainer.ChangeSecondaryGrid(data);
+            _gridOverlayRoot.Add(primaryGridContainer);
+            _gridOverlayRoot.Add(secondaryGridContainer);
         }
 
         private void CreateGridElements(GridData data, VisualElement container, string title)
@@ -139,13 +64,18 @@ namespace Game.OnlyEditor
             };
             gridSizeField.RegisterValueChangedCallback(evt =>
             {
-                data.gridSize = evt.newValue;
+                Vector2Int newSize = evt.newValue;
 
-                if (evt.newValue.x < 1 || evt.newValue.y < 1)
+                if (newSize.x < 1 || newSize.y < 1)
                 {
                     Debug.LogWarning("Grid size must be at least 1x1.");
+                    if (newSize.x < 1) newSize.x = 1;
+                    if (newSize.y < 1) newSize.y = 1;
+                    gridSizeField.value = newSize;
                     return;
                 }
+
+                data.gridSize = newSize;
 
                 bool isPrimaryGrid = data == _primaryGridData;
                 SaveGrid(isPrimaryGrid, data);
@@ -166,6 +96,7 @@ namespace Game.OnlyEditor
                 data.padding = evt.newValue;
                 bool isPrimaryGrid = data == _primaryGridData;
                 SaveGrid(isPrimaryGrid, data);
+                _levelEditor.RefreshGrids();
             });
             container.Add(paddingField);
 
@@ -182,6 +113,7 @@ namespace Game.OnlyEditor
                 data.spacing = evt.newValue;
                 bool isPrimaryGrid = data == _primaryGridData;
                 SaveGrid(isPrimaryGrid, data);
+                _levelEditor.RefreshGrids();
             });
             container.Add(spacingField);
 
@@ -202,9 +134,39 @@ namespace Game.OnlyEditor
             container.Add(cellSizeField);
         }
 
+        private void SaveGrid(bool isPrimaryGrid, GridData data)
+        {
+            if (isPrimaryGrid)
+                _levelEditor.selectedLevelContainer.ChangePrimaryGrid(data);
+            else
+                _levelEditor.selectedLevelContainer.ChangeSecondaryGrid(data);
+        }
 
+        public void UpdateGridData()
+        {
+            if (_levelEditor == null)
+            {
+                Debug.LogError("LevelEditor instance is null. Cannot update grid data.");
+                DestroyInstance();
+                return;
+            }
 
+            else if (_levelEditor.selectedLevelContainer == null)
+            {
+                _primaryGridData = GridData.defaultPrimaryGrid;
+                _secondaryGridData = GridData.defaultSecondaryGrid;
+                return;
+            }
+
+            GridData.Copy(_levelEditor.selectedLevelContainer.primaryGrid, _primaryGridData);
+            GridData.Copy(_levelEditor.selectedLevelContainer.secondaryGrid, _secondaryGridData);
+
+            Repaint();
+        }
 
 
     }
+
+
+
 }

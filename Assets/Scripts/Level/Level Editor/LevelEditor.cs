@@ -9,20 +9,30 @@ using UnityEngine;
 #if UNITY_EDITOR
 namespace Game.OnlyEditor
 {
-    using CellTypes = OnlyEditor.EditorCellType;
+    using CellTypes = EditorCellType;
     [ExecuteAlways]
     public class LevelEditor : MonoSingleton<LevelEditor>
     {
-        public event Action onLevelContainerUpdated;
+        public static event Action onLevelContainerUpdated;
+        public static event Action onCellsRefreshed;
+        public static Action<EditorGridCell> onEditorCellUpdated;
 
         [SerializeField] private LevelContainer _selectedLevelContainer;
-        [SerializeField] private List<EditorGridCell> _cells;
         [SerializeField] private GameManager _gameManager;
         [SerializeField] private Transform _cellParent;
+
+        private EditorGridCell[,] _primaryCells = new EditorGridCell[0, 0];
+        private EditorGridCell[,] _secondaryCells = new EditorGridCell[0, 0];
 
         [Space]
         [SerializeField] private EditorGridCell _cellPrefab;
         [SerializeField] private Mesh _passengerMesh;
+
+        public bool isLoaded = false;
+
+        public EditorGridCell[,] primaryCells => _primaryCells;
+        public EditorGridCell[,] secondaryCells => _secondaryCells;
+
 
         public GameManager gameManager => _gameManager;
 
@@ -32,8 +42,9 @@ namespace Game.OnlyEditor
             set
             {
                 _selectedLevelContainer = value;
-                onLevelContainerUpdated?.Invoke();
                 RefreshGrids();
+                onLevelContainerUpdated?.Invoke();
+                UnityEditor.Selection.activeObject = _selectedLevelContainer;
             }
         }
 
@@ -53,14 +64,10 @@ namespace Game.OnlyEditor
             }
 
             FindType();
-            gameObject.hideFlags = HideFlags.None;
-            _gameManager.gameObject.hideFlags = HideFlags.None;
-            _cells = new List<EditorGridCell>();
 
             gameObject.hideFlags = HideFlags.NotEditable;
             _gameManager.gameObject.hideFlags = HideFlags.NotEditable;
             _cellParent.gameObject.hideFlags = HideFlags.NotEditable;
-
 
             EditorGridCell[] oldCells = _cellParent.GetComponentsInChildren<EditorGridCell>();
             foreach (var cell in oldCells)
@@ -74,16 +81,15 @@ namespace Game.OnlyEditor
             if (Application.isPlaying) LevelLoader.InitPersistent(_selectedLevelContainer);
             else if (_selectedLevelContainer != null) RefreshGrids();
 
+            isLoaded = true;
         }
 
 
         private void OnDisable()
         {
+            isLoaded = false;
             ClearAllCells();
         }
-
-
-
 
         public void RefreshGrids()
         {
@@ -102,8 +108,7 @@ namespace Game.OnlyEditor
             _gameManager.primaryGrid.cellSize = _selectedLevelContainer.primaryGrid.cellSize;
             _gameManager.primaryGrid.padding = _selectedLevelContainer.primaryGrid.padding;
             _gameManager.primaryGrid.spacing = _selectedLevelContainer.primaryGrid.spacing;
-
-
+            _primaryCells = new EditorGridCell[pX, pY];
 
             for (int x = 0; x < pX; x++)
             {
@@ -113,9 +118,10 @@ namespace Game.OnlyEditor
                     newCell.transform.SetParent(_cellParent, true);
                     newCell.cellType = CellTypes.Primary;
                     newCell.position = new Vector2Int(x, y);
-                    _cells.Add(newCell);
+                    _primaryCells[x, y] = newCell;
                 }
             }
+
 
             int sX = _selectedLevelContainer.secondaryGrid.gridSize.x;
             int sY = _selectedLevelContainer.secondaryGrid.gridSize.y;
@@ -124,6 +130,7 @@ namespace Game.OnlyEditor
             _gameManager.secondaryGrid.cellSize = _selectedLevelContainer.secondaryGrid.cellSize;
             _gameManager.secondaryGrid.padding = _selectedLevelContainer.secondaryGrid.padding;
             _gameManager.secondaryGrid.spacing = _selectedLevelContainer.secondaryGrid.spacing;
+            _secondaryCells = new EditorGridCell[sX, sY];
 
             for (int x = 0; x < sX; x++)
             {
@@ -134,9 +141,11 @@ namespace Game.OnlyEditor
                     newCell.transform.SetParent(_cellParent, true);
                     newCell.cellType = FindSecondaryCellType(position);
                     newCell.position = position;
-                    _cells.Add(newCell);
+                    _secondaryCells[x, y] = newCell;
                 }
             }
+
+            onCellsRefreshed?.Invoke();
         }
 
 
@@ -157,7 +166,7 @@ namespace Game.OnlyEditor
                 {
                     if (passenger.gridPosition == position)
                     {
-                        return CellTypes.HasPasenger;
+                        return CellTypes.HasPassenger;
                     }
                 }
             }
@@ -186,14 +195,22 @@ namespace Game.OnlyEditor
 
         private void ClearAllCells() //TO DO: Add cells to a pool instead of destroying them?
         {
-            foreach (var cell in _cells)
+            foreach (var cell in primaryCells)
             {
                 if (cell != null)
                 {
                     DestroyImmediate(cell.gameObject);
                 }
             }
-            _cells.Clear();
+
+            foreach (var cell in secondaryCells)
+            {
+                if (cell != null)
+                {
+                    DestroyImmediate(cell.gameObject);
+                }
+            }
+
         }
 
 

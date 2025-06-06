@@ -31,7 +31,6 @@ namespace Game.OnlyEditor
 
             CreateDefaultContent();
             CreateGridPanelContent();
-            CreateBusPanelContent();
             CreateCellPanelContent();
 
             if (SceneHelper.isGameScene || SceneHelper.isHomeScene) displayed = false;
@@ -52,7 +51,6 @@ namespace Game.OnlyEditor
             titleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
             titleLabel.style.fontSize = 20;
             titleLabel.style.marginBottom = 10;
-
 
             _selectedLevelContainerField = new ObjectField("Editing Level")
             {
@@ -146,7 +144,7 @@ namespace Game.OnlyEditor
 
         private void CloseAllWindows()
         {
-            EditGridsWindow.DestroyInstance();
+            LevelEditorWindow.DestroyInstance();
         }
 
 
@@ -158,7 +156,9 @@ namespace Game.OnlyEditor
             {
                 CloseAllWindows();
                 displayed = false;
+                return;
             }
+            
             displayed = true;
             _levelEditor = LevelEditor.instance;
             _selectedLevelContainerField.value = _levelEditor.selectedLevelContainer;

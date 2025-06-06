@@ -17,8 +17,8 @@ namespace Game.OnlyEditor
 
 
         public Vector2Int position;
-        public ColorList _passengerColor;
         [SerializeField] private EditorCellType _cellType = EditorCellType.Empty;
+        private ColorList _passengerColor;
 
         private static GUIStyle _labelStyle;
 
@@ -38,6 +38,16 @@ namespace Game.OnlyEditor
             }
         }
 
+        public ColorList passengerColor
+        {
+            get => _passengerColor;
+            set
+            {
+                _passengerColor = value;
+                LevelEditor.onEditorCellUpdated?.Invoke(this);
+            }
+        }
+
 
         public EditorCellType cellType
         {
@@ -45,6 +55,7 @@ namespace Game.OnlyEditor
             set
             {
                 _cellType = value;
+                LevelEditor.onEditorCellUpdated?.Invoke(this);
             }
         }
 
@@ -60,7 +71,7 @@ namespace Game.OnlyEditor
         }
 
 
-        private Color GetGizmosColor()
+        public Color GetGizmosColor()
         {
             switch (cellType)
             {
@@ -68,7 +79,7 @@ namespace Game.OnlyEditor
                     return Color.white;
                 case EditorCellType.Obstacle:
                     return Color.black;
-                case EditorCellType.HasPasenger:
+                case EditorCellType.HasPassenger:
                     return _passengerColor.ToColor();
                 case EditorCellType.Primary:
                     return Color.cyan;
@@ -107,7 +118,7 @@ namespace Game.OnlyEditor
                 case EditorCellType.Obstacle:
                     Gizmos.DrawCube(transform.position, Vector3.one * cellSize);
                     break;
-                case EditorCellType.HasPasenger:
+                case EditorCellType.HasPassenger:
                     Gizmos.DrawMesh(LevelEditor.instance.PassengerMesh, transform.position, Quaternion.Euler(-90, 0, 0), Vector3.one);
                     Gizmos.color = Color.gray;
                     Gizmos.DrawCube(transform.position, Vector3.one / 2 * cellSize);
@@ -132,7 +143,7 @@ namespace Game.OnlyEditor
         Empty, //Secondary
         Primary,
         Obstacle,
-        HasPasenger,
+        HasPassenger,
     }
 
 }

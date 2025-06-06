@@ -3963,7 +3963,7 @@ CanvasGroup:
   m_IgnoreParentGroups: 0
 --- !u!1 &1056926129
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 8
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -3980,7 +3980,7 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &1056926130
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 8
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -4003,7 +4003,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1056926131
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 8
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -4026,7 +4026,7 @@ MonoBehaviour:
     type: 2}
 --- !u!1 &1070075387
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 8
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -4042,7 +4042,7 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &1070075388
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 8
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -5622,12 +5622,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _selectedLevelContainer: {fileID: 11400000, guid: 9ab4041fcca0f004e8a9cfebb01fc1e8,
     type: 2}
-  _cells: []
+  _cells:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   _gameManager: {fileID: 1056926131}
   _cellParent: {fileID: 1070075388}
   _cellPrefab: {fileID: -137623784069556184, guid: 0c469e227f5548a4c918558770cd9558,
     type: 3}
-  passengerMesh: {fileID: 92828502624608948, guid: e663a27e85edf644682a296dc6d63aa7,
+  _passengerMesh: {fileID: 92828502624608948, guid: e663a27e85edf644682a296dc6d63aa7,
     type: 3}
 --- !u!4 &1605303819
 Transform:

@@ -26,17 +26,17 @@ namespace Game.OnlyEditor
 
             Button editGridsButton = new Button(() =>
             {
-                EditGridsWindow.ShowWindow();
+                LevelEditorWindow.ShowWindow();
             })
             {
-                text = "Edit Grids",
+                text = "Edit All",
                 style =
                 {
                     marginBottom = 10,
                     width = 250,
-                    color = new StyleColor(Color.yellow),
+                    color = new StyleColor(Color.cyan),
                 },
-                tooltip = "Show grid editing window."
+                tooltip = "Edit grids & cells & buses in a single window."
             };
 
             _gridOverlayRoot.Add(editGridsButton);
