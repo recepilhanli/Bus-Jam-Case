@@ -15,9 +15,11 @@ namespace Game.Level
     public partial class GameManager
     {
 
+
         private async UniTask InitLevels()
         {
-            await LevelLoader.InitAsync(); 
+            if (SceneHelper.isGameScene) await LevelLoader.InitAsync(); //Temp
+
             LevelContainer currentLevel = LevelLoader.currentLevel;
             if (currentLevel == null)
             {
@@ -43,6 +45,8 @@ namespace Game.Level
                 ReturnToHome();
                 return;
             }
+
+            FadeUI.FadeOut(2.5f, true);
 
             _ = LevelLoader.LoadNextLevelAsync(); //Lazy loading next level
 
@@ -86,6 +90,17 @@ namespace Game.Level
                 ReturnToHome();
             }
         }
+
+        [ContextMenu("Return to Home")]
+        public void ReturnToHome()
+        {
+            Reset();
+            FadeUI.FadeIn(5f).OnComplete(ReturnHome);
+        }
+
+        private void ReturnHome() => SceneHelper.LoadScene(SceneHelper.HOME_SCENE_INDEX);
+
+
 
     }
 }

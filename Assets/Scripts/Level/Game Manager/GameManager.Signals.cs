@@ -7,8 +7,8 @@ namespace Game.Level
 {
     public partial class GameManager
     {
-        public event Action OnGameStarted;
-        public event Action OnGamePaused;
+        public event Action onGameStarted;
+        public event Action onGamePaused;
 
         public event Action<Bus> onActiveBusArrived;
         public event Action<Bus> onOldActiveBusLeft;

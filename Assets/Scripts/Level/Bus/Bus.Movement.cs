@@ -35,12 +35,7 @@ namespace Game.Level
 
         public void ShakeBus()
         {
-            if (_currentTween.isAlive)
-            {
-                Debug.LogError("Cannot overwrite a movement tween while the bus is moving.");
-                return;
-            }
-          
+            if (_currentTween.isAlive) return;
             _currentTween = Tween.ShakeLocalRotation(transform, _shakeRotationStrength, DEFAULT_SHAKE_ROTATION_DURATION, 10, asymmetryFactor: .6f, cycles: -1, easeBetweenShakes: Ease.InOutBounce);
         }
 

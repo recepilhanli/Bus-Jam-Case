@@ -17,6 +17,8 @@ namespace Game.Level
     /// </summary>
     public static class LevelLoader
     {
+        public const string LEVEL_PREFIX = "Level_";
+        public const string LEVEL_FOLDER = "Assets/Scenes/Levels/";
 
         public const string LEVEL_CONTAINER_ADDRESS = "Levels/";
         public const int MAX_LEVEL_COUNT = 5; //Maximum number of levels in ram
@@ -40,12 +42,23 @@ namespace Game.Level
             await LoadLevelsAsync();
         }
 
+        public static void InitPersistent(LevelContainer level)
+        {
+            if (isInitialized) return;
+            Debug.Assert(level != null, "Level cannot be null when initializing LevelLoader.");
+            _levelContainers = new LevelContainer[MAX_LEVEL_COUNT];
+            _levelContainers[0] = level; // Initialize the first level with the provided level
+            _currentLevelIndex = 0; // Set the current level index to 0
+            _isInitialized = true;
+            PlayerStats.currentLevel = 1;
+        }
+
         private static async UniTask LoadLevelsAsync()
         {
 
             for (int i = 0; i < MAX_LEVEL_COUNT; i++)
             {
-                var levelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{i + PlayerStats.currentLevel}.asset";
+                var levelAddress = $"{LEVEL_CONTAINER_ADDRESS}{LEVEL_PREFIX}{i + PlayerStats.currentLevel}.asset";
                 var levelContainer = await Addressables.LoadAssetAsync<LevelContainer>(levelAddress).Task;
                 if (levelContainer != null)
                 {
@@ -62,7 +75,7 @@ namespace Game.Level
         {
             if (!isInitialized)
             {
-                Debug.LogError("LevelManager is not initialized. Call Init() before accessing levels.");
+                Debug.LogError("LevelLoader is not initialized. Call Init() before accessing levels.");
                 return null;
             }
 
@@ -73,7 +86,7 @@ namespace Game.Level
         {
             if (!isInitialized)
             {
-                Debug.LogError("LevelManager is not initialized. Call Init() before accessing levels.");
+                Debug.LogError("LevelLoader is not initialized. Call Init() before accessing levels.");
                 return null;
             }
             int index = (_currentLevelIndex + 1 < _levelContainers.Length) ? _currentLevelIndex + 1 : 0;
@@ -84,7 +97,7 @@ namespace Game.Level
         {
             if (!isInitialized)
             {
-                Debug.LogError("LevelManager is not initialized. Call Init() before accessing levels.");
+                Debug.LogError("LevelLoader is not initialized. Call Init() before accessing levels.");
                 return;
             }
 
@@ -102,6 +115,8 @@ namespace Game.Level
             if (nextLevelContainer != null) _levelContainers[_currentLevelIndex - 1] = nextLevelContainer;
             else Debug.LogWarning($"Next level not found at address: {nextLevelAddress}");
         }
+
+
 
     }
 

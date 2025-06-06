@@ -34,11 +34,11 @@ namespace Game.UI
             set
             {
                 instance._root.SetActive(value);
-                GameManager.instance.SetEnableInput(!value);
+                if (GameManager.instance) GameManager.instance.SetEnableInput(!value);
 
                 if (value)
                 {
-                    if (SceneManager.GetActiveScene().buildIndex == GameManager.SCENE_HOME_INDEX) instance._returnHomeButton.gameObject.SetActive(false);
+                    if (SceneManager.GetActiveScene().buildIndex == SceneHelper.HOME_SCENE_INDEX) instance._returnHomeButton.gameObject.SetActive(false);
                     else instance._returnHomeButton.gameObject.SetActive(true);
                     instance._returnHomeWarnPanel.SetActive(false);
                     Tween.Alpha(instance._canvasGroup, .2f, 1f, .2f);

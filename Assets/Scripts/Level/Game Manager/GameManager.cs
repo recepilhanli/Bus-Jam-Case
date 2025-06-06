@@ -11,8 +11,7 @@ namespace Game.Level
     public partial class GameManager : MonoSingleton<GameManager>
     {
 
-        public const int SCENE_HOME_INDEX = 0;
-
+      
         private async UniTaskVoid Start()
         {
             InitTapping();
@@ -43,13 +42,7 @@ namespace Game.Level
             _reservedBus = null;
         }
 
-        [ContextMenu("Return to Home")]
-        public void ReturnToHome()
-        {
-            Reset();
-            SceneHelper.LoadScene(SCENE_HOME_INDEX);
-        }
-
+     
 
     }
 

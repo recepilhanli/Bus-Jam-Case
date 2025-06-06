@@ -15,6 +15,14 @@ namespace Game.Player
         public static event Action<bool> onColorBlindEnabledChanged;
         #endregion
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Init()
+        {
+#if UNITY_EDITOR
+            Application.targetFrameRate = 60;
+#endif
+        }
+
 
         public static bool soundEnabled
         {

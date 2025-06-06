@@ -8,13 +8,18 @@ using UnityEngine;
 
 namespace Game.UI
 {
-    public class LevelCounterUI : MonoSingleton<LevelCounterUI>
+    public class LevelCounterUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI _levelText;
+        [SerializeField] private bool _countWithLevelText = true;
 
-        public static int levelNumber
+        public int levelNumber
         {
-            set => instance._levelText.text = value.ToString();
+            set
+            {
+                if (!_countWithLevelText) _levelText.text = value.ToString();
+                else _levelText.text = $"Level {value}";
+            }
         }
 
         private void Start()
