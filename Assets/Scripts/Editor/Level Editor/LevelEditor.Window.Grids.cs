@@ -111,9 +111,6 @@ namespace Game.OnlyEditor
             root.Add(secondaryGridContainer);
 
             CreateGridElements(_secondaryGridData, secondaryGridContainer, "Secondary Grid");
-
-
-
         }
 
         private void SaveGrid(bool isPrimaryGrid, GridData data)

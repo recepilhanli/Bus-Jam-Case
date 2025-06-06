@@ -17,14 +17,10 @@ namespace Game.OnlyEditor
     [Overlay(typeof(SceneView), "Level Editor Overlay", true)]
     public partial class LevelEditorOverlay : Overlay
     {
-
-
         private VisualElement _root;
 
         private ObjectField _selectedLevelContainerField;
         private LevelEditor _levelEditor;
-
-
 
         public override VisualElement CreatePanelContent()
         {
