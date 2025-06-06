@@ -1,45 +1,62 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Data;
+using Game.Level;
 using Game.Utils;
 using UnityEditor;
 using UnityEditor.Overlays;
+using UnityEditor.SceneManagement;
+using UnityEditor.Search;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace Game.OnlyEditor
 {
 
-    [Overlay(typeof(SceneView), "Editor Grid Cell Overlay", true)]
-    public class EditorGridCellOverlay : Overlay
-    {
-        
-        private VisualElement _root;
-        private EditorGridCell _selectedCell;
 
-        private Label _positionLabel;
-        private EnumField _cellTypeField;
+    public partial class LevelEditorOverlay
+    {
+
+        private VisualElement _cellOverlayRoot;
+        private VisualElement _cellBottomOverlayRoot; //for toggle
 
         private VisualElement _colorButtonContainer;
+        private EditorGridCell _selectedCell;
 
+        private EnumField _cellTypeField;
+        private Toggle _editCellToggle;
 
-        public override VisualElement CreatePanelContent()
+        private void ShowCellContent(bool show)
         {
-            _root = new VisualElement();
+            _cellOverlayRoot.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+            _root.MarkDirtyRepaint();
+        }
 
-            Selection.selectionChanged += OnSelectionChanged;
 
-            _positionLabel = new Label("Cell (0,0)");
-            _positionLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
-            _positionLabel.style.marginBottom = 4;
+        private void CreateCellPanelContent()
+        {
+            _cellOverlayRoot = new VisualElement();
+            _cellBottomOverlayRoot = new VisualElement();
 
-            //enum dropdown
+            _editCellToggle = new Toggle("Edit Cell")
+            {
+                value = true,
+                style =
+                {
+                    marginBottom = 4
+                }
+            };
+
             _cellTypeField = new EnumField("Cell Type", _selectedCell?.cellType ?? EditorCellType.Empty);
 
 
 
-            _root.Add(_positionLabel);
-            _root.Add(_cellTypeField);
+            _editCellToggle.RegisterValueChangedCallback(evt =>
+              {
+                  _cellBottomOverlayRoot.style.display = evt.newValue ? DisplayStyle.Flex : DisplayStyle.None;
+              });
 
             _cellTypeField.RegisterValueChangedCallback(evt =>
             {
@@ -48,36 +65,34 @@ namespace Game.OnlyEditor
                     var type = (EditorCellType)evt.newValue;
                     _selectedCell.cellType = type;
                     UpdateSelectedCell();
-
-
                 }
             });
 
+            _cellOverlayRoot.Add(_editCellToggle);
+            _cellOverlayRoot.Add(_cellBottomOverlayRoot);
+            _cellBottomOverlayRoot.Add(_cellTypeField);
+            CreateColorButtons();
+            _root.Add(_cellOverlayRoot);
+
             OnSelectionChanged();
-
-            return _root;
         }
-
-
 
         private void OnSelectionChanged()
         {
             var go = Selection.activeGameObject;
             if (!go || !go.TryGetComponent<EditorGridCell>(out var cell))
             {
-                displayed = false;
+                ShowCellContent(false);
                 return;
             }
-            
+
+            ShowCellContent(true);
 
             _selectedCell = null;
             _cellTypeField.value = cell.cellType;
             _selectedCell = cell;
 
             UpdateSelectedCell();
-
-
-            displayed = true;
         }
 
 
@@ -86,39 +101,16 @@ namespace Game.OnlyEditor
             if (_selectedCell == null) return;
 
             if (_selectedCell.cellType == EditorCellType.HasPasenger) ShowColors(true);
-            else
-            {
-                ShowColors(false);
-                Debug.Log("Hiding colors");
-            }
+            else ShowColors(false);
 
-            _positionLabel.text = $"Cell ({_selectedCell.position.x}, {_selectedCell.position.y})";
+            _editCellToggle.text = $"({_selectedCell.position.x}, {_selectedCell.position.y})";
 
         }
 
 
         private void ShowColors(bool show)
         {
-            if (_colorButtonContainer != null && _root.Contains(_colorButtonContainer) && !show)
-            {
-                _root.Remove(_colorButtonContainer);
-                _root.MarkDirtyRepaint();
-                return;
-            }
-
-            else if (show)
-            {
-                if (_colorButtonContainer != null)
-                {
-
-                    if (_root.Contains(_colorButtonContainer)) return; // already added
-                    _root.Add(_colorButtonContainer);
-                    _root.MarkDirtyRepaint();
-                    return;
-                }
-                else CreateColorButtons();
-            }
-
+            _colorButtonContainer.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         private void CreateColorButtons()
@@ -130,7 +122,7 @@ namespace Game.OnlyEditor
             var colorTypes = Enum.GetValues(typeof(ColorList));
             Button[] _colorButtons = new Button[colorTypes.Length]; // -1 for empty type
 
-            Label colorButtonsLabel = new Label("Select Passenger Color:");
+            Label colorButtonsLabel = new Label("Passenger Color:");
             colorButtonsLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
             colorButtonsLabel.style.marginBottom = 4;
             _colorButtonContainer.Add(colorButtonsLabel);
@@ -151,25 +143,18 @@ namespace Game.OnlyEditor
                         width = 20,
                         height = 20,
                         marginBottom = 2
-                    }
+                    },
+                    tooltip = colorType.ToString()
                 };
                 _colorButtonContainer.Add(_colorButtons[i]);
             }
 
-            _root.Add(_colorButtonContainer);
-            _root.MarkDirtyRepaint();
+            _cellBottomOverlayRoot.Add(_colorButtonContainer);
+            _cellBottomOverlayRoot.MarkDirtyRepaint();
         }
 
 
 
-        ~EditorGridCellOverlay()
-        {
-            Selection.selectionChanged -= OnSelectionChanged;
-        }
     }
 
 }
-
-
-
-

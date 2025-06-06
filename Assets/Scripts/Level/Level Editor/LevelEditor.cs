@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.Data;
@@ -12,6 +13,8 @@ namespace Game.OnlyEditor
     [ExecuteAlways]
     public class LevelEditor : MonoSingleton<LevelEditor>
     {
+        public event Action onLevelContainerUpdated;
+
         [SerializeField] private LevelContainer _selectedLevelContainer;
         [SerializeField] private List<EditorGridCell> _cells;
         [SerializeField] private GameManager _gameManager;
@@ -19,7 +22,9 @@ namespace Game.OnlyEditor
 
         [Space]
         [SerializeField] private EditorGridCell _cellPrefab;
-        [SerializeField] private Mesh passengerMesh;
+        [SerializeField] private Mesh _passengerMesh;
+
+        public GameManager gameManager => _gameManager;
 
         public LevelContainer selectedLevelContainer
         {
@@ -27,14 +32,16 @@ namespace Game.OnlyEditor
             set
             {
                 _selectedLevelContainer = value;
+                onLevelContainerUpdated?.Invoke();
                 RefreshGrids();
             }
         }
 
+
         public Mesh PassengerMesh
         {
-            get => passengerMesh;
-            set => passengerMesh = value;
+            get => _passengerMesh;
+            set => _passengerMesh = value;
         }
 
         private void OnEnable()
@@ -50,6 +57,11 @@ namespace Game.OnlyEditor
             _gameManager.gameObject.hideFlags = HideFlags.None;
             _cells = new List<EditorGridCell>();
 
+            gameObject.hideFlags = HideFlags.NotEditable;
+            _gameManager.gameObject.hideFlags = HideFlags.NotEditable;
+            _cellParent.gameObject.hideFlags = HideFlags.NotEditable;
+
+
             EditorGridCell[] oldCells = _cellParent.GetComponentsInChildren<EditorGridCell>();
             foreach (var cell in oldCells)
             {
@@ -59,10 +71,9 @@ namespace Game.OnlyEditor
                 }
             }
 
-            if (Application.isPlaying)
-            {
-                LevelLoader.InitPersistent(_selectedLevelContainer);
-            }
+            if (Application.isPlaying) LevelLoader.InitPersistent(_selectedLevelContainer);
+            else if (_selectedLevelContainer != null) RefreshGrids();
+
         }
 
 
@@ -70,6 +81,8 @@ namespace Game.OnlyEditor
         {
             ClearAllCells();
         }
+
+
 
 
         public void RefreshGrids()

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.Data
 {
-
+    using Grid = Level.Grid;
     [Serializable]
     public class GridData
     {
@@ -31,6 +31,27 @@ namespace Game.Data
             spacing = new Vector2(1f, 1f),
             cellSize = 1f
         };
+
+        public static void Copy(GridData source, GridData target)
+        {
+            if (source == null || target == null) return;
+
+            target.gridSize = source.gridSize;
+            target.padding = source.padding;
+            target.spacing = source.spacing;
+            target.cellSize = source.cellSize;
+        }
+
+
+        public static void Copy(Grid source, GridData target)
+        {
+            if (source == null || target == null) return;
+
+            target.gridSize = new Vector2Int(source.width, source.height);
+            target.padding = source.padding;
+            target.spacing = source.spacing;
+            target.cellSize = source.cellSize;
+        }
     }
 
 

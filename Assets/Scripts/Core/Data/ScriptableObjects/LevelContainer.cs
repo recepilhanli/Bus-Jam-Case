@@ -12,6 +12,15 @@ namespace Game.Data
         public BusData busData = new BusData();
 
 
+        public void ChangePrimaryGrid(GridData newGridData)
+        {
+            GridData.Copy(newGridData, primaryGrid);
+        }
+
+        public void ChangeSecondaryGrid(GridData newGridData)
+        {
+            GridData.Copy(newGridData, secondaryGrid);
+        }
     }
 
 }

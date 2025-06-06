@@ -15,12 +15,28 @@ namespace Game.OnlyEditor
     public class EditorGridCell : MonoBehaviour
     {
 
-        
+
         public Vector2Int position;
         public ColorList _passengerColor;
         [SerializeField] private EditorCellType _cellType = EditorCellType.Empty;
 
         private static GUIStyle _labelStyle;
+
+
+        private float cellSize
+        {
+            get
+            {
+                if (LevelEditor.instance == null || LevelEditor.instance.selectedLevelContainer == null)
+                    return 1f;
+
+                float size = _cellType == EditorCellType.Primary
+                    ? LevelEditor.instance.selectedLevelContainer.primaryGrid.cellSize
+                    : LevelEditor.instance.selectedLevelContainer.secondaryGrid.cellSize;
+
+                return size;
+            }
+        }
 
 
         public EditorCellType cellType
@@ -35,13 +51,6 @@ namespace Game.OnlyEditor
         private void Awake()
         {
             gameObject.hideFlags = HideFlags.NotEditable | HideFlags.DontSaveInEditor;
-            
-            if (_labelStyle == null) _labelStyle = new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 10,
-                alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = Color.red },
-            };
         }
 
         private void OnDrawGizmos()
@@ -50,7 +59,7 @@ namespace Game.OnlyEditor
             DrawGizmos();
         }
 
- 
+
         private Color GetGizmosColor()
         {
             switch (cellType)
@@ -68,36 +77,50 @@ namespace Game.OnlyEditor
             }
         }
 
+        private void OnGUI()
+        {
+            if (_labelStyle == null)
+            {
+                _labelStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 12,
+                    normal = { textColor = Color.white },
+                    alignment = TextAnchor.MiddleCenter
+                };
+            }
+
+
+        }
+
 
         private void DrawGizmos()
         {
-            //draw position as text
-            Handles.Label(transform.position + Vector3.up, $"({position.x}, {position.y})", _labelStyle);
+            if (_labelStyle != null) Handles.Label(transform.position + Vector3.up, $"({position.x}, {position.y})", _labelStyle);
 
 
             switch (cellType)
             {
                 case EditorCellType.Empty:
-                    Gizmos.DrawCube(transform.position, Vector3.one);
+                    Gizmos.DrawCube(transform.position, Vector3.one * cellSize);
                     //draw text
                     break;
                 case EditorCellType.Obstacle:
-                    Gizmos.DrawCube(transform.position, Vector3.one);
+                    Gizmos.DrawCube(transform.position, Vector3.one * cellSize);
                     break;
                 case EditorCellType.HasPasenger:
                     Gizmos.DrawMesh(LevelEditor.instance.PassengerMesh, transform.position, Quaternion.Euler(-90, 0, 0), Vector3.one);
                     Gizmos.color = Color.gray;
-                    Gizmos.DrawCube(transform.position, Vector3.one / 2);
+                    Gizmos.DrawCube(transform.position, Vector3.one / 2 * cellSize);
                     break;
                 case EditorCellType.Primary:
-                    Gizmos.DrawWireCube(transform.position, Vector3.one);
+                    Gizmos.DrawWireCube(transform.position, Vector3.one * cellSize);
                     break;
             }
 
             if (Selection.activeGameObject == gameObject)
             {
                 Handles.color = Color.yellow;
-                Handles.DrawSolidDisc(transform.position, Vector3.up, .85f);
+                Handles.DrawSolidDisc(transform.position, Vector3.up, .85f * cellSize);
             }
 
         }
