@@ -59,13 +59,20 @@ namespace Game.Level
             for (int i = 0; i < MAX_LEVEL_COUNT; i++)
             {
                 var levelAddress = $"{LEVEL_CONTAINER_ADDRESS}{LEVEL_PREFIX}{i + PlayerStats.currentLevel}.asset";
-                var levelContainer = await Addressables.LoadAssetAsync<LevelContainer>(levelAddress).Task;
-                if (levelContainer != null)
+                try
                 {
-                    _levelContainers[i] = levelContainer;
-                    Debug.Log($"Level {i} loaded from address: {levelAddress}");
+
+                    var levelContainer = await Addressables.LoadAssetAsync<LevelContainer>(levelAddress).Task;
+                    if (levelContainer != null)
+                    {
+                        _levelContainers[i] = levelContainer;
+                        Debug.Log($"Level {i} loaded from address: {levelAddress}");
+                    }
                 }
-                else Debug.LogWarning($"Level {i} not found at address: {levelAddress}");
+                catch
+                {
+                 Debug.LogWarning($"Level {i} not found at address: {levelAddress}");
+                }
             }
 
             _isInitialized = true;
