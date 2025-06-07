@@ -33,6 +33,8 @@ namespace Game.Level
             }
 
             if (_currentTween.isAlive) _currentTween.Stop();
+
+            _totalPassengersInBus = 0;
         }
 
         public void ReturnToPool() => PoolManager.GetPool(PoolTypes.Bus).ReturnToPool(this);
