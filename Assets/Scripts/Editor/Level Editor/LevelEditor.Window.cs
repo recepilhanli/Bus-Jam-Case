@@ -106,6 +106,11 @@ namespace Game.OnlyEditor
 
         }
 
+        private void OnGUI()
+        {
+            UpdateCellGUI();
+        }
+
 
         private VisualElement CreateTitle(string title)
         {

@@ -100,9 +100,7 @@ namespace Game.OnlyEditor
 
             ShowCellContent(true);
 
-
-
-            _cellTypeField.value = _selectedCells.Count > 0 ? _selectedCells[0].cellType : null;
+            if (_selectedCells.Count == 1) _cellTypeField.value = _selectedCells[0].cellType;
 
             UpdateSelectedCell();
         }

@@ -17,11 +17,27 @@ namespace Game.OnlyEditor
     {
         private EditorGridCell _lastSelectedCell = null;
         private VisualElement _cellsOverlayRoot;
+        private HelpBox _multipleCellSelectionHelpBox;
         private ScrollView _cellsScrollView;
+        private bool _multipleCellSelection = false;
 
         private void CreateCellPanelContent()
         {
             _cellsOverlayRoot = CreateTitle("Edit Cells");
+
+            _multipleCellSelectionHelpBox = new HelpBox(" ", HelpBoxMessageType.Info);
+            _multipleCellSelectionHelpBox.style.display = DisplayStyle.Flex;
+            _cellsOverlayRoot.Add(_multipleCellSelectionHelpBox);
+            UpdateMultipleSelectionHelpBox();
+
+
+            //row line
+            var rowLine = new VisualElement();
+            rowLine.style.height = 1;
+            rowLine.style.backgroundColor = Color.gray;
+            rowLine.style.marginTop = 5;
+            rowLine.style.marginBottom = 5;
+            _cellsOverlayRoot.Add(rowLine);
 
 
             _cellsScrollView = new ScrollView(ScrollViewMode.VerticalAndHorizontal);
@@ -36,6 +52,8 @@ namespace Game.OnlyEditor
             UpdateCells();
 
             _cellsOverlayRoot.Add(_cellsScrollView);
+
+            _multipleCellSelection = false;
         }
 
         private void UpdateCell(EditorGridCell cell)
@@ -155,8 +173,35 @@ namespace Game.OnlyEditor
         {
             Button selectButton = new Button(() =>
           {
-              Selection.activeGameObject = cell.gameObject;
-              GetSelectedEditorCell();
+              _multipleCellSelectionHelpBox.Focus();
+
+              if (!_multipleCellSelection) Selection.activeGameObject = cell.gameObject;
+              else
+              {
+                  if (Selection.Contains(cell.gameObject))
+                  {
+                      var selectedObjects = new List<UnityEngine.Object>();
+                      selectedObjects.AddRange(Selection.objects);
+                      selectedObjects.Remove(cell.gameObject);
+                      Selection.objects = selectedObjects.ToArray();
+
+                      Debug.Log($"Deselected {cell.gameObject.name}. Total selected: {Selection.objects.Length}.");
+                  }
+                  else
+                  {
+                      var selectedObjects = new List<UnityEngine.Object>()
+                      {
+                          cell.gameObject
+                      };
+                      selectedObjects.AddRange(Selection.objects);
+
+                      Selection.objects = selectedObjects.ToArray();
+                      Debug.Log($"Selected {selectedObjects.Count} cells.");
+                  }
+
+              }
+
+
           })
             {
                 text = (cell.cellType != EditorCellType.HasPassenger) ? "*" : "P",
@@ -182,27 +227,37 @@ namespace Game.OnlyEditor
         }
 
 
-
-        private void GetSelectedEditorCell()
+        private void UpdateCellGUI()
         {
-            var gameObject = Selection.activeGameObject;
-            if (gameObject == null)
+            Event e = Event.current;
+
+            if (e.type == EventType.KeyDown && e.keyCode == KeyCode.M)
             {
-                _lastSelectedCell = null;
-                return;
+                _multipleCellSelection = !_multipleCellSelection;
+                UpdateMultipleSelectionHelpBox();
             }
-
-            else if (_lastSelectedCell != null && _lastSelectedCell.gameObject.GetInstanceID() == gameObject.GetInstanceID()) return;
-
-            _lastSelectedCell = gameObject.GetComponent<EditorGridCell>();
-
         }
 
-
-
+        private void UpdateMultipleSelectionHelpBox()
+        {
+            if (_multipleCellSelection)
+            {
+                _multipleCellSelectionHelpBox.style.display = DisplayStyle.Flex;
+                _multipleCellSelectionHelpBox.text = "Multiple cell selection is enabled.\nSelect this window press M to toggle.";
+                _multipleCellSelectionHelpBox.style.color = Color.green;
+            }
+            else
+            {
+                _multipleCellSelectionHelpBox.style.display = DisplayStyle.Flex;
+                _multipleCellSelectionHelpBox.text = "Multiple cell selection is disabled.\nSelect this window press M to toggle.";
+                _multipleCellSelectionHelpBox.style.color = Color.white;
+            }
+        }
 
     }
 
 
-
 }
+
+
+
