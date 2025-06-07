@@ -218,8 +218,14 @@ namespace Game.OnlyEditor
 
     public enum EditorCellType
     {
-        Empty, //Secondary
+
+        /// <summary>
+        /// Cannot be selected in secondary grid.
+        /// </summary>
         Primary,
+        
+        //Secondary grid cell types
+        Empty,
         Obstacle,
         HasPassenger,
     }

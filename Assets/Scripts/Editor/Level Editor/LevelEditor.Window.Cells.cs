@@ -173,7 +173,6 @@ namespace Game.OnlyEditor
         {
             Button selectButton = new Button(() =>
           {
-              _multipleCellSelectionHelpBox.Focus();
 
               if (!_multipleCellSelection) Selection.activeGameObject = cell.gameObject;
               else
@@ -199,6 +198,8 @@ namespace Game.OnlyEditor
                       Debug.Log($"Selected {selectedObjects.Count} cells.");
                   }
 
+                  _multipleCellSelectionHelpBox.Focus();
+                  
               }
 
 

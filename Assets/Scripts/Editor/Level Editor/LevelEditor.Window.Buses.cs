@@ -49,6 +49,10 @@ namespace Game.OnlyEditor
             _busOverlayRoot = CreateTitle("Edit Buses");
             _busOverlayRoot.style.flexDirection = FlexDirection.Column;
 
+            var helpBox = new HelpBox("You can add, remove and change bus colors.\nFirst color will arrive as first bus.\nLast color will arrive as last bus.", HelpBoxMessageType.Info);
+            helpBox.style.marginBottom = 5;
+            _busOverlayRoot.Add(helpBox);
+
             LevelEditor.onLevelContainerUpdated += SyncBusData;
 
             ScrollView scrollView = new ScrollView(ScrollViewMode.Vertical);
@@ -82,6 +86,7 @@ namespace Game.OnlyEditor
                 text = "Add Bus Color",
                 style =
             {
+            marginTop = 5,
             color = Color.cyan
             }
 
