@@ -46,7 +46,11 @@ namespace Game.UI
             }
         }
 
-        private void Start() => DontDestroyOnLoad(gameObject);
+        private void Start()
+        {
+            transform.SetParent(null); //make sure the UI is not a child of any other object
+            DontDestroyOnLoad(gameObject);
+        }
 
 
         #region UI Actions
