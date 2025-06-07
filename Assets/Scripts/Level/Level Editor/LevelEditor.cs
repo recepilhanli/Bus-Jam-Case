@@ -16,7 +16,7 @@ namespace Game.OnlyEditor
     {
         public static event Action onLevelContainerUpdated;
         public static event Action onCellsRefreshed;
-        public static Action<EditorGridCell> onEditorCellUpdated;
+    
 
         [SerializeField] private LevelContainer _selectedLevelContainer;
         [SerializeField] private GameManager _gameManager;

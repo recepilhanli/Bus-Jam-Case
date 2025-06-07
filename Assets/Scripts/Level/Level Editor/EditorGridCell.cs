@@ -16,6 +16,9 @@ namespace Game.OnlyEditor
     public class EditorGridCell : MonoBehaviour
     {
 
+        public static event Action<EditorGridCell> onEditorCellUpdated;
+        public static event Action<EditorGridCell> onEditorCellSelected;
+
         public Vector2Int position;
         [SerializeField] private EditorCellType _cellType = EditorCellType.Empty;
         private ColorList _passengerColor;
@@ -42,7 +45,7 @@ namespace Game.OnlyEditor
             {
                 if (_passengerColor == value) return;
                 _passengerColor = value;
-                LevelEditor.onEditorCellUpdated?.Invoke(this);
+                onEditorCellUpdated?.Invoke(this);
                 UpdateContainerCellContent();
             }
         }
@@ -61,7 +64,7 @@ namespace Game.OnlyEditor
                     return;
                 }
                 _cellType = value;
-                LevelEditor.onEditorCellUpdated?.Invoke(this);
+                onEditorCellUpdated?.Invoke(this);
                 UpdateContainerCellContent();
             }
         }
@@ -69,7 +72,7 @@ namespace Game.OnlyEditor
         public void InitType(EditorCellType type)
         {
             _cellType = type;
-            LevelEditor.onEditorCellUpdated?.Invoke(this);
+            onEditorCellUpdated?.Invoke(this);
         }
 
         public void InitColor(ColorList color) => _passengerColor = color;
@@ -177,6 +180,11 @@ namespace Game.OnlyEditor
             }
         }
 
+        private void OnDrawGizmosSelected()
+        {
+            onEditorCellSelected?.Invoke(this);
+        }
+
 
         private void DrawGizmos()
         {
@@ -206,9 +214,11 @@ namespace Game.OnlyEditor
                 return;
 
 
+
+
             if (Selection.Contains(gameObject))
             {
-                Handles.color = Color.yellow;
+                Handles.color = (cellType != EditorCellType.Primary) ? Color.yellow : Color.cyan;
                 Handles.DrawSolidDisc(transform.position, Vector3.up, .85f * cellSize);
             }
 
@@ -223,7 +233,7 @@ namespace Game.OnlyEditor
         /// Cannot be selected in secondary grid.
         /// </summary>
         Primary,
-        
+
         //Secondary grid cell types
         Empty,
         Obstacle,

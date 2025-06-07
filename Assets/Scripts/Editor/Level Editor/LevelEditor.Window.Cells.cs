@@ -15,11 +15,15 @@ namespace Game.OnlyEditor
 
     public partial class LevelEditorWindow
     {
-        private EditorGridCell _lastSelectedCell = null;
+        private const float DEFAULT_CELL_BUTTON_ALPHA = 0.75f;
+
         private VisualElement _cellsOverlayRoot;
         private HelpBox _multipleCellSelectionHelpBox;
         private ScrollView _cellsScrollView;
         private bool _multipleCellSelection = false;
+        private double _selectionCoolDown = 0;
+
+        private Dictionary<int, Button> _cellButtons = new Dictionary<int, Button>();
 
         private void CreateCellPanelContent()
         {
@@ -46,14 +50,21 @@ namespace Game.OnlyEditor
             _cellsScrollView.style.justifyContent = Justify.FlexStart;
 
             LevelEditor.onLevelContainerUpdated += UpdateCells;
-            LevelEditor.onEditorCellUpdated += UpdateCell;
             LevelEditor.onCellsRefreshed += UpdateCells;
+            EditorGridCell.onEditorCellUpdated += UpdateCell;
+            Selection.selectionChanged += CheckCellSelection;
 
             UpdateCells();
 
             _cellsOverlayRoot.Add(_cellsScrollView);
 
             _multipleCellSelection = false;
+        }
+
+        private void CheckCellSelection()
+        {
+            if (_selectionCoolDown > EditorApplication.timeSinceStartup) return;
+            RefreshMarks();
         }
 
         private void UpdateCell(EditorGridCell cell)
@@ -123,6 +134,7 @@ namespace Game.OnlyEditor
             int secondaryHeight = secondaryCells.GetLength(1);
             int currentWidth = 0;
 
+            _cellButtons.Clear();
 
             //primary 
             foreach (var cell in primaryCells)
@@ -163,6 +175,7 @@ namespace Game.OnlyEditor
                 }
             }
 
+            RefreshMarks();
         }
 
 
@@ -171,10 +184,24 @@ namespace Game.OnlyEditor
 
         private Button CreateCellButton(EditorGridCell cell)
         {
+            if (cell == null)
+            {
+                Debug.LogError("Cell is null, cannot create button.");
+                return null;
+            }
+
+            Color color = cell.GetGizmosColor();
+            color.a = DEFAULT_CELL_BUTTON_ALPHA;
+
             Button selectButton = new Button(() =>
           {
 
-              if (!_multipleCellSelection) Selection.activeGameObject = cell.gameObject;
+              if (!_multipleCellSelection)
+              {
+                  Selection.activeGameObject = cell.gameObject;
+                  ClearAllButtonMarks();
+                  MarkCellButton(cell);
+              }
               else
               {
                   if (Selection.Contains(cell.gameObject))
@@ -183,6 +210,7 @@ namespace Game.OnlyEditor
                       selectedObjects.AddRange(Selection.objects);
                       selectedObjects.Remove(cell.gameObject);
                       Selection.objects = selectedObjects.ToArray();
+                      UnmarkCellButton(cell);
 
                       Debug.Log($"Deselected {cell.gameObject.name}. Total selected: {Selection.objects.Length}.");
                   }
@@ -193,13 +221,14 @@ namespace Game.OnlyEditor
                           cell.gameObject
                       };
                       selectedObjects.AddRange(Selection.objects);
+                      MarkCellButton(cell);
 
                       Selection.objects = selectedObjects.ToArray();
                       Debug.Log($"Selected {selectedObjects.Count} cells.");
                   }
 
                   _multipleCellSelectionHelpBox.Focus();
-                  
+
               }
 
 
@@ -209,13 +238,87 @@ namespace Game.OnlyEditor
                 style =
                     {
                         width = 20,
-                        backgroundColor = cell.GetGizmosColor(),
+                        backgroundColor = color,
                         color =  (cell.cellType != EditorCellType.HasPassenger) ? Color.white :  Color.black,
                     },
                 tooltip = $"({cell.position.x}, {cell.position.y})\nType: {cell.cellType}\nClick to select this cell."
             };
+
+            _cellButtons.TryAdd(cell.gameObject.GetInstanceID(), selectButton);
+
             return selectButton;
         }
+
+        private void MarkCellButton(EditorGridCell cell)
+        {
+            MarkCellButton(cell.gameObject.GetInstanceID());
+        }
+
+        private void MarkCellButton(int instanceId)
+        {
+            _selectionCoolDown = EditorApplication.timeSinceStartup + 0.1f; // Cooldown to prevent spamming selection
+
+            if (_cellButtons.TryGetValue(instanceId, out Button button))
+            {
+                button.style.borderBottomColor = Color.yellow;
+                button.style.borderBottomWidth = 1.5f;
+
+                Color color = button.style.backgroundColor.value;
+                color.a = 1f;
+                button.style.backgroundColor = color;
+            }
+        }
+
+
+
+
+
+        private void UnmarkCellButton(EditorGridCell cell)
+        {
+            if (_cellButtons.TryGetValue(cell.gameObject.GetInstanceID(), out Button button))
+            {
+                button.style.borderBottomColor = Color.clear;
+                button.style.borderBottomWidth = 0;
+
+                Color color = button.style.backgroundColor.value;
+                color.a = DEFAULT_CELL_BUTTON_ALPHA;
+                button.style.backgroundColor = color;
+            }
+            else
+            {
+                Debug.LogWarning($"Button for cell {cell.gameObject.name} not found.");
+            }
+        }
+
+        private void ClearAllButtonMarks()
+        {
+            foreach (var button in _cellButtons.Values)
+            {
+                button.style.borderBottomColor = Color.clear;
+                button.style.borderBottomWidth = 0;
+
+                Color color = button.style.backgroundColor.value;
+                color.a = DEFAULT_CELL_BUTTON_ALPHA;
+                button.style.backgroundColor = color;
+            }
+        }
+
+        private void RefreshMarks()
+        {
+            ClearAllButtonMarks();
+
+            if (Selection.objects.Length == 0) return;
+
+            foreach (var obj in Selection.objects)
+            {
+                if (obj is GameObject cellGo)
+                {
+                    MarkCellButton(cellGo.GetInstanceID());
+                }
+            }
+        }
+
+
 
         private ScrollView CreateHorizontalScrollView()
         {
@@ -230,6 +333,9 @@ namespace Game.OnlyEditor
 
         private void UpdateCellGUI()
         {
+            if (_cellsOverlayRoot.style.display == DisplayStyle.None)
+                return;
+
             Event e = Event.current;
 
             if (e.type == EventType.KeyDown && e.keyCode == KeyCode.M)

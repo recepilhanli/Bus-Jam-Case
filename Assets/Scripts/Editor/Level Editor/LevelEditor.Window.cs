@@ -147,9 +147,10 @@ namespace Game.OnlyEditor
             {
                 LevelEditor.onLevelContainerUpdated -= UpdateGridData;
                 LevelEditor.onLevelContainerUpdated -= UpdateCells;
-                LevelEditor.onEditorCellUpdated -= UpdateCell;
                 LevelEditor.onCellsRefreshed -= UpdateCells;
                 LevelEditor.onLevelContainerUpdated -= SyncBusData;
+                EditorGridCell.onEditorCellUpdated -= UpdateCell;
+                Selection.selectionChanged -= CheckCellSelection;
             }
             _instance = null;
         }
