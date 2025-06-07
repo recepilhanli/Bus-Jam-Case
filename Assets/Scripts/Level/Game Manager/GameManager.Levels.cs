@@ -15,7 +15,7 @@ namespace Game.Level
     public partial class GameManager
     {
 
-        [SerializeField,Space] private bool _editMode = true;
+        [SerializeField, Space] private bool _editMode = true;
 
         private async UniTask InitLevels()
         {
@@ -97,15 +97,15 @@ namespace Game.Level
             {
                 LoadPassengers(SaveManager.currentLevelData);
                 LoadBuses(SaveManager.currentLevelData);
+                InitTimer(SaveManager.currentLevelData.remainingTime);
             }
             else
             {
                 LoadPassengers(levelContainer);
                 LoadBuses(in levelContainer.busData);
+                InitTimer(levelContainer.timeConstraint);
             }
 
-            float initialTime = levelContainer.timeConstraint;
-            InitTimer(initialTime);
 
             CheckSecondaryGridFrontLine();
         }
@@ -138,6 +138,12 @@ namespace Game.Level
             SaveManager.SavePlayerState();
             SaveManager.DeleteCurrentLevel();
             SceneHelper.LoadScene(SceneHelper.HOME_SCENE_INDEX);
+        }
+
+        public void GiveUp()
+        {
+            PlayerStats.remainingLives--;
+            ReturnToHome();
         }
 
         private void HandleLevelLoss()

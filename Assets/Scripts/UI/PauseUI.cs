@@ -84,7 +84,7 @@ namespace Game.UI
         {
             _returnHomeWarnPanel.SetActive(false);
             enable = false;
-            GameManager.instance.ReturnToHome();
+            GameManager.instance.GiveUp();
         }
 
         public void Close() => enable = false;

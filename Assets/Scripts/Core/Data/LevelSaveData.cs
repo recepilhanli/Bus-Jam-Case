@@ -10,6 +10,7 @@ namespace Game.Data
         public List<PassengerData> secondaryGridPassengers = new List<PassengerData>();
         public List<PassengerData> primaryGridPassengers = new List<PassengerData>();
         public BusData remainingBuses = new BusData();
+        public float remainingTime = 0f;
 
 
         public static LevelSaveData GetCurrentLevel()
@@ -44,7 +45,8 @@ namespace Game.Data
             {
                 primaryGridPassengers = primaryGridPassengers,
                 secondaryGridPassengers = secondaryGridPassengers,
-                remainingBuses = remainingBusesData
+                remainingBuses = remainingBusesData,
+                remainingTime = manager.remainingTime
             };
 
             return saveData;

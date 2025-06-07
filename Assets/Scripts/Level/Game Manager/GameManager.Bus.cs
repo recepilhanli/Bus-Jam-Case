@@ -85,7 +85,6 @@ namespace Game.Level
                 onLevelFailed?.Invoke();
             }
             else SaveManager.SaveCurrentGame();
-            
         }
 
         public void ActivateNextBus()
