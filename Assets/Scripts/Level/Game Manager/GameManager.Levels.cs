@@ -49,6 +49,9 @@ namespace Game.Level
             }
 
             FadeUI.FadeOut(2.5f, true);
+            PlayerStats.currentLevel++;
+            SaveManager.DeleteCurrentLevel(); //Delete current level save data
+            SaveManager.SavePlayerState(); //Save player state before loading next level
 
             _ = LevelLoader.LoadNextLevelAsync(); //Lazy loading next level
 
