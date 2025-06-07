@@ -101,8 +101,6 @@ namespace Game.Level
                 return;
             }
 
-            PlayerStats.currentLevel++;
-
             // Release the previous level container
             Addressables.Release(currentLevel);
             _levelContainers[_currentLevelIndex] = null;
