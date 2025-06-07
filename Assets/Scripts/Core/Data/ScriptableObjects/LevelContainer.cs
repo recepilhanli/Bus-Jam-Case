@@ -10,7 +10,7 @@ namespace Game.Data
         public GridData primaryGrid = new GridData();
         public ExtendedGridData secondaryGrid = new ExtendedGridData();
         public BusData busData = new BusData();
-
+        public float timeConstraint = 60f;
 
         public void ChangePrimaryGrid(GridData newGridData)
         {

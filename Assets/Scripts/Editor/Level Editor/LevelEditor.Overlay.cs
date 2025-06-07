@@ -22,6 +22,7 @@ namespace Game.OnlyEditor
         private VisualElement _root;
 
         private ObjectField _selectedLevelContainerField;
+        private FloatField _timeConstraintField;
         private LevelEditor _levelEditor;
 
         public override VisualElement CreatePanelContent()
@@ -79,6 +80,25 @@ namespace Game.OnlyEditor
                  LevelContainerSelectorWindow.ShowWindow();
              });
 
+            _timeConstraintField = new FloatField("Time Constraint")
+            {
+                value = _levelEditor ? _levelEditor.selectedLevelContainer.timeConstraint : 60f,
+                style =
+                {
+                    marginBottom = 10,
+                    width = 250
+                },
+                tooltip = "Set the time constraint (In Seconds) for the level. This is the time limit for completing the level."
+            };
+
+            _timeConstraintField.RegisterValueChangedCallback(evt =>
+            {
+                if (_levelEditor && _levelEditor.selectedLevelContainer)
+                {
+                    _levelEditor.selectedLevelContainer.timeConstraint = evt.newValue;
+                }
+            });
+
             var createLevelButton = new Button(() =>
             {
                 int lastLevelNumberInFolder = FindLastLevelInFolder();
@@ -129,6 +149,7 @@ namespace Game.OnlyEditor
 
             _root.Add(titleLabel);
             _root.Add(_selectedLevelContainerField);
+            _root.Add(_timeConstraintField);
             _root.Add(createLevelButton);
         }
 
@@ -189,8 +210,7 @@ namespace Game.OnlyEditor
             }
 
             _selectedLevelContainerField.value = _levelEditor.selectedLevelContainer;
-            Debug.Log($"Level container updated: {_levelEditor.selectedLevelContainer.name}");
-
+            _timeConstraintField.value = _levelEditor.selectedLevelContainer.timeConstraint;
         }
 
         ~LevelEditorOverlay()
