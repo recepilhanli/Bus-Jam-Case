@@ -23,7 +23,8 @@ namespace Game.OnlyEditor
         private VisualElement _cellBottomOverlayRoot; //for toggle
 
         private VisualElement _colorButtonContainer;
-        private EditorGridCell _selectedCell;
+
+        private List<EditorGridCell> _selectedCells = new List<EditorGridCell>();
 
         private EnumField _cellTypeField;
         private Toggle _editCellToggle;
@@ -49,7 +50,7 @@ namespace Game.OnlyEditor
                 }
             };
 
-            _cellTypeField = new EnumField("Cell Type", _selectedCell?.cellType ?? EditorCellType.Empty);
+            _cellTypeField = new EnumField("Cell Type", EditorCellType.Empty);
 
             _editCellToggle.RegisterValueChangedCallback(evt =>
               {
@@ -58,7 +59,7 @@ namespace Game.OnlyEditor
 
             _cellTypeField.RegisterValueChangedCallback(evt =>
             {
-                if (_selectedCell != null)
+                if (_selectedCells.Count > 0)
                 {
                     var type = (EditorCellType)evt.newValue;
                     if (type == EditorCellType.Primary)
@@ -67,7 +68,10 @@ namespace Game.OnlyEditor
                         _cellTypeField.value = type; // Reset to empty if primary is selected
                         Debug.LogWarning("Primary cell type cannot be selected. Resetting to Empty.");
                     }
-                    _selectedCell.cellType = type;
+                    foreach (var cell in _selectedCells)
+                    {
+                        cell.cellType = type;
+                    }
                     UpdateSelectedCell();
                 }
             });
@@ -83,8 +87,12 @@ namespace Game.OnlyEditor
 
         private void OnSelectionChanged()
         {
-            var go = Selection.activeGameObject;
-            if (!go || !go.TryGetComponent<EditorGridCell>(out var cell))
+
+            EditorGridCell[] selectedCells = Selection.GetFiltered<EditorGridCell>(SelectionMode.Unfiltered);
+            _selectedCells.Clear();
+            _selectedCells.AddRange(selectedCells);
+
+            if (_selectedCells.Count == 0)
             {
                 ShowCellContent(false);
                 return;
@@ -92,9 +100,9 @@ namespace Game.OnlyEditor
 
             ShowCellContent(true);
 
-            _selectedCell = null;
-            _cellTypeField.value = cell.cellType;
-            _selectedCell = cell;
+
+
+            _cellTypeField.value = _selectedCells.Count > 0 ? _selectedCells[0].cellType : null;
 
             UpdateSelectedCell();
         }
@@ -102,14 +110,29 @@ namespace Game.OnlyEditor
 
         private void UpdateSelectedCell()
         {
-            if (_selectedCell == null) return;
+            if (_selectedCells.Count >= 2)
+            {
+                _editCellToggle.text = "Multiple Cells Selected";
+                ShowColors(true);
+                return;
+            }
 
-            if (_selectedCell.cellType == EditorCellType.HasPassenger) ShowColors(true);
+            if (_selectedCells.Count == 0)
+            {
+                _editCellToggle.text = "No Cell Selected";
+                ShowColors(false);
+                return;
+            }
+
+            var selectedCell = _selectedCells[0];
+            if (selectedCell == null) return;
+
+            if (selectedCell.cellType == EditorCellType.HasPassenger) ShowColors(true);
             else ShowColors(false);
 
-            _editCellToggle.text = $"({_selectedCell.position.x}, {_selectedCell.position.y})";
-
+            _editCellToggle.text = $"({selectedCell.position.x}, {selectedCell.position.y})";
         }
+
 
 
         private void ShowColors(bool show)
@@ -137,7 +160,12 @@ namespace Game.OnlyEditor
                 Color color = colorType.ToColor();
                 _colorButtons[i] = new Button(() =>
                 {
-                    _selectedCell.passengerColor = colorType;
+
+                    foreach (var cell in _selectedCells)
+                    {
+                        cell.passengerColor = colorType;
+                    }
+
                 })
                 {
                     text = "*",

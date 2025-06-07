@@ -67,33 +67,7 @@ namespace Game.OnlyEditor
 
             _busListView.makeItem = GetBusColorField;
 
-            _busListView.bindItem = (element, index) =>
-            {
-                var container = element as VisualElement;
-                var enumField = container.ElementAt(0) as EnumField;
-                var removeButton = container.ElementAt(1) as Button;
-
-                enumField.Init(_busColors[index]);
-                enumField.value = _busColors[index];
-
-                enumField.RegisterValueChangedCallback(evt =>
-                {
-                    _busColors[index] = (ColorList)evt.newValue;
-                    UpdateContainerBusData();
-                });
-
-                removeButton.clickable.clicked -= null;
-                removeButton.clickable.clicked += () =>
-                {
-                    if (index >= 0 && index < _busColors.Count)
-                    {
-                        _busColors.RemoveAt(index);
-                        _busListView.Rebuild();
-                    }
-                };
-
-                UpdateContainerBusData();
-            };
+            _busListView.bindItem = BindBusColorField;
 
             scrollView.Add(_busListView);
 
@@ -103,12 +77,14 @@ namespace Game.OnlyEditor
                 _busListView.Rebuild();
                 UpdateContainerBusData();
             })
+
             {
                 text = "Add Bus Color",
                 style =
-        {
+            {
             color = Color.cyan
-        }
+            }
+
             };
 
             var clearButton = new Button(() =>
@@ -130,21 +106,52 @@ namespace Game.OnlyEditor
             _busOverlayRoot.Add(clearButton);
         }
 
+        private void BindBusColorField(VisualElement element, int index)
+        {
+            var container = element as VisualElement;
+            var enumField = container.ElementAt(0) as EnumField;
+            var removeButton = container.ElementAt(1) as Button;
 
+            enumField.Init(_busColors[index]);
+            enumField.value = _busColors[index];
+
+            enumField.RegisterValueChangedCallback(evt =>
+            {
+                _busColors[index] = (ColorList)evt.newValue;
+                UpdateContainerBusData();
+            });
+
+            removeButton.clickable.clicked -= null;
+            removeButton.clickable.clicked += () =>
+            {
+                if (index >= 0 && index < _busColors.Count)
+                {
+                    _busColors.RemoveAt(index);
+                    _busListView.Rebuild();
+                    UpdateContainerBusData();
+                }
+            };
+
+        }
 
         private VisualElement GetBusColorField()
         {
             var container = new VisualElement();
             container.style.flexDirection = FlexDirection.Row;
-            container.style.alignItems = Align.Center;
+            container.style.alignItems = Align.Stretch;
+            container.style.flexGrow = 1;
 
             var enumField = new EnumField(ColorList.White);
             enumField.style.flexGrow = 1;
+            enumField.style.marginRight = 4;
 
             var removeButton = new Button { text = "X" };
             removeButton.style.width = 25;
             removeButton.style.marginLeft = 4;
             removeButton.style.unityTextAlign = TextAnchor.MiddleCenter;
+            removeButton.style.backgroundColor = Color.red;
+            removeButton.style.unityFontStyleAndWeight = FontStyle.Bold;
+
             container.Add(enumField);
             container.Add(removeButton);
             return container;

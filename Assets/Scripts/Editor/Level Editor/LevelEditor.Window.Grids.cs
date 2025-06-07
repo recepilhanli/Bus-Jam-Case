@@ -16,12 +16,17 @@ namespace Game.OnlyEditor
     {
 
         private VisualElement _gridOverlayRoot;
+        private List<GridPanel> _gridPanels = new List<GridPanel>();
+
+
+
 
         private void CreateGridPanelContent()
         {
 
             _gridOverlayRoot = CreateTitle("Edit Grids");
             LevelEditor.onLevelContainerUpdated += UpdateGridData;
+            LevelEditor.onCellsRefreshed += UpdateGridData;
 
 
             // Primary Grid
@@ -54,7 +59,14 @@ namespace Game.OnlyEditor
             gridTitleLabel.style.marginBottom = 5;
             container.Add(gridTitleLabel);
 
-            var gridSizeField = new Vector2IntField("Grid Size")
+            var gridPanel = new GridPanel
+            {
+                attachedData = data
+            };
+            
+            _gridPanels.Add(gridPanel);
+
+            gridPanel.gridSizeField = new Vector2IntField("Grid Size")
             {
                 value = data.gridSize,
                 style =
@@ -62,7 +74,7 @@ namespace Game.OnlyEditor
                     marginBottom = 5
                 }
             };
-            gridSizeField.RegisterValueChangedCallback(evt =>
+            gridPanel.gridSizeField.RegisterValueChangedCallback(evt =>
             {
                 Vector2Int newSize = evt.newValue;
 
@@ -71,7 +83,7 @@ namespace Game.OnlyEditor
                     Debug.LogWarning("Grid size must be at least 1x1.");
                     if (newSize.x < 1) newSize.x = 1;
                     if (newSize.y < 1) newSize.y = 1;
-                    gridSizeField.value = newSize;
+                    gridPanel.gridSizeField.value = newSize;
                     return;
                 }
 
@@ -81,9 +93,9 @@ namespace Game.OnlyEditor
                 SaveGrid(isPrimaryGrid, data);
                 _levelEditor.RefreshGrids();
             });
-            container.Add(gridSizeField);
+            container.Add(gridPanel.gridSizeField);
 
-            var paddingField = new Vector2Field("Padding")
+            gridPanel.paddingField = new Vector2Field("Padding")
             {
                 value = data.padding,
                 style =
@@ -91,16 +103,16 @@ namespace Game.OnlyEditor
                     marginBottom = 5
                 }
             };
-            paddingField.RegisterValueChangedCallback(evt =>
-            {
-                data.padding = evt.newValue;
-                bool isPrimaryGrid = data == _primaryGridData;
-                SaveGrid(isPrimaryGrid, data);
-                _levelEditor.RefreshGrids();
-            });
-            container.Add(paddingField);
+            gridPanel.paddingField.RegisterValueChangedCallback(evt =>
+             {
+                 data.padding = evt.newValue;
+                 bool isPrimaryGrid = data == _primaryGridData;
+                 SaveGrid(isPrimaryGrid, data);
+                 _levelEditor.RefreshGrids();
+             });
+            container.Add(gridPanel.paddingField);
 
-            var spacingField = new Vector2Field("Spacing")
+            gridPanel.spacingField = new Vector2Field("Spacing")
             {
                 value = data.spacing,
                 style =
@@ -108,16 +120,16 @@ namespace Game.OnlyEditor
                     marginBottom = 5
                 }
             };
-            spacingField.RegisterValueChangedCallback(evt =>
-            {
-                data.spacing = evt.newValue;
-                bool isPrimaryGrid = data == _primaryGridData;
-                SaveGrid(isPrimaryGrid, data);
-                _levelEditor.RefreshGrids();
-            });
-            container.Add(spacingField);
+            gridPanel.spacingField.RegisterValueChangedCallback(evt =>
+             {
+                 data.spacing = evt.newValue;
+                 bool isPrimaryGrid = data == _primaryGridData;
+                 SaveGrid(isPrimaryGrid, data);
+                 _levelEditor.RefreshGrids();
+             });
+            container.Add(gridPanel.spacingField);
 
-            var cellSizeField = new FloatField("Cell Size")
+            gridPanel.cellSizeField = new FloatField("Cell Size")
             {
                 value = data.cellSize,
                 style =
@@ -125,13 +137,13 @@ namespace Game.OnlyEditor
                     marginBottom = 5
                 }
             };
-            cellSizeField.RegisterValueChangedCallback(evt =>
+            gridPanel.cellSizeField.RegisterValueChangedCallback(evt =>
             {
                 data.cellSize = evt.newValue;
                 bool isPrimaryGrid = data == _primaryGridData;
                 SaveGrid(isPrimaryGrid, data);
             });
-            container.Add(cellSizeField);
+            container.Add(gridPanel.cellSizeField);
         }
 
         private void SaveGrid(bool isPrimaryGrid, GridData data)
@@ -161,7 +173,38 @@ namespace Game.OnlyEditor
             GridData.Copy(_levelEditor.selectedLevelContainer.primaryGrid, _primaryGridData);
             GridData.Copy(_levelEditor.selectedLevelContainer.secondaryGrid, _secondaryGridData);
 
+            foreach (var gridPanel in _gridPanels)
+            {
+                gridPanel.Update();
+            }
+
+
             Repaint();
+        }
+
+
+        class GridPanel
+        {
+            public Vector2Field paddingField;
+            public Vector2Field spacingField;
+            public FloatField cellSizeField;
+            public Vector2IntField gridSizeField;
+            public GridData attachedData;
+
+            public void Update()
+            {
+                if (paddingField != null)
+                    paddingField.value = attachedData.padding;
+
+                if (spacingField != null)
+                    spacingField.value = attachedData.spacing;
+
+                if (cellSizeField != null)
+                    cellSizeField.value = attachedData.cellSize;
+
+                if (gridSizeField != null)
+                    gridSizeField.value = attachedData.gridSize;
+            }
         }
 
 

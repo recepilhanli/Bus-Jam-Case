@@ -16,13 +16,9 @@ namespace Game.OnlyEditor
     public class EditorGridCell : MonoBehaviour
     {
 
-
         public Vector2Int position;
         [SerializeField] private EditorCellType _cellType = EditorCellType.Empty;
         private ColorList _passengerColor;
-
-        private static GUIStyle _labelStyle;
-
 
         private float cellSize
         {
@@ -44,6 +40,7 @@ namespace Game.OnlyEditor
             get => _passengerColor;
             set
             {
+                if (_passengerColor == value) return;
                 _passengerColor = value;
                 LevelEditor.onEditorCellUpdated?.Invoke(this);
                 UpdateContainerCellContent();
@@ -57,6 +54,12 @@ namespace Game.OnlyEditor
             get => _cellType;
             set
             {
+                if (_cellType == value) return;
+                else if (_cellType == EditorCellType.Primary)
+                {
+                    Debug.LogError("Cannot change cell type of primary cell!");
+                    return;
+                }
                 _cellType = value;
                 LevelEditor.onEditorCellUpdated?.Invoke(this);
                 UpdateContainerCellContent();
@@ -197,7 +200,13 @@ namespace Game.OnlyEditor
                     break;
             }
 
-            if (Selection.activeGameObject == gameObject)
+
+            //get selection list
+            if (LevelEditor.instance == null || LevelEditor.instance.selectedLevelContainer == null)
+                return;
+
+
+            if (Selection.Contains(gameObject))
             {
                 Handles.color = Color.yellow;
                 Handles.DrawSolidDisc(transform.position, Vector3.up, .85f * cellSize);
