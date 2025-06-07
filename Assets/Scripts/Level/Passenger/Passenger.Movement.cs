@@ -39,7 +39,8 @@ namespace Game.Level
             Debug.Assert(activeBus != null, "Active bus is not assigned in GameManager.");
             if (activeBus && !activeBus.TryAddPassenger(this)) return;
 
-            GoTo(activeBus.transform.position);
+            GoTo(activeBusPosition);
+
             _movementSequence.OnComplete(this, activeBus.onPassengerGetOnBus);
             EnableMoveAnimation();
             return;

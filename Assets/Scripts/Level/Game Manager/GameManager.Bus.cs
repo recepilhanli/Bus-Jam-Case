@@ -28,9 +28,9 @@ namespace Game.Level
         private Bus _nextBus;
         private Bus _reservedBus;
         private int _currentBusIndex = 0;
-
         private bool _wasActiveBusArrived = false;
 
+        public bool wasActiveBusArrived => _wasActiveBusArrived;
         public int currentBusIndex => _currentBusIndex;
       
 
@@ -84,6 +84,8 @@ namespace Game.Level
                 Debug.LogWarning($"Primary grid has no space for bus: {bus.name}. Level failed.");
                 onLevelFailed?.Invoke();
             }
+            else SaveManager.SaveCurrentGame();
+            
         }
 
         public void ActivateNextBus()

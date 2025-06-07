@@ -16,6 +16,7 @@ namespace Game.Level
         
         public GridCell attachedCell = null;
         private Bus activeBus => GameManager.instance.activeBus;
+        private static Vector3 activeBusPosition => GameManager.instance.activeBusPosition.position;
 
         private void Start()
         {

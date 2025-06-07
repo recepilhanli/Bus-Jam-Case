@@ -58,7 +58,7 @@ namespace Game.Level
             passenger.MoveToCell(cell);
             cell.SetPassenger(passenger);
 
-            if (!primaryGrid.hasSpace && _wasActiveBusArrived && activeBus.hasSpace)
+            if (!primaryGrid.hasSpace && _wasActiveBusArrived && activeBus.hasSpace && !PrimaryGridHasActivePassengers())
             {
                 onLevelFailed?.Invoke();
                 Debug.LogWarning("Primary grid has no space, but the active bus has space. Level failed.");

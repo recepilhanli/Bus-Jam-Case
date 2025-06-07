@@ -48,6 +48,7 @@ namespace Game.Level
                 cellRenderer.enabled = !value;
 
                 cellObstacle.SetActive(value);
+                _isObstacle = value;
             }
         }
 

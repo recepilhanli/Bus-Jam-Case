@@ -16,6 +16,25 @@ namespace Game.Level
             onActiveBusArrived += CheckPrimaryGrid;
         }
 
+        private bool PrimaryGridHasActivePassengers()
+        {
+            if (primaryGrid == null)
+            {
+                Debug.LogError("Primary grid is not assigned in GameManager.");
+                return false;
+            }
+
+            foreach (var cell in primaryGrid.cells)
+            {
+                if (!cell.isEmpty && cell.passenger.color == activeBusColor)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void CheckPrimaryGrid(Bus arrivedBus)
         {
             Debug.Log($"Checking primary grid for bus: {arrivedBus.name}");
