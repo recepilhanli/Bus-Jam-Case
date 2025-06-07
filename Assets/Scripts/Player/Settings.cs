@@ -16,7 +16,7 @@ namespace Game.Player
         public static event Action<bool> onColorBlindEnabledChanged;
         #endregion
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
 #if UNITY_EDITOR
