@@ -18,18 +18,6 @@ namespace Game.Level
             await InitLevels();
             InitGrids();
             InitBuses();
-
-#if !UNITY_EDITOR
-            PrimeTweenConfig.warnEndValueEqualsCurrent = false;
-            PrimeTweenConfig.warnTweenOnDisabledTarget = false;
-#endif
-
-        }
-
-
-        private void Update()
-        {
-
         }
 
 
@@ -40,9 +28,9 @@ namespace Game.Level
             _nextBus = null;
             _activeBus = null;
             _reservedBus = null;
+            StopTimer();
         }
 
-     
 
     }
 

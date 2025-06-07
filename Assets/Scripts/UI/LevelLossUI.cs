@@ -7,14 +7,11 @@ using UnityEngine.UI;
 
 namespace Game.UI
 {
-
     public class LevelLossUI : MonoSingleton<LevelLossUI>
     {
 
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private Button _tryAgainButton;
-
-        // [SerializeField] private Button _KeepPlayingButton;
 
         public static bool enable
         {
@@ -22,6 +19,11 @@ namespace Game.UI
 
             set
             {
+                if (value && instance.gameObject.activeSelf)
+                {
+                    Debug.LogWarning("LevelLossUI is already enabled.");
+                    return;
+                }
 
                 instance.gameObject.SetActive(value);
                 if (value)
@@ -35,7 +37,6 @@ namespace Game.UI
             }
         }
 
-
         public void RestartLevel()
         {
             enable = false;
@@ -47,9 +48,6 @@ namespace Game.UI
             enable = false;
             GameManager.instance.ReturnToHome();
         }
-
-
-
     }
 
 }

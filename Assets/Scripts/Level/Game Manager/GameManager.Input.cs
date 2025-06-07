@@ -87,8 +87,7 @@ namespace Game.Level
             }
 
             cell.navMeshObstacleEnabled = false; 
-
-            await UniTask.NextFrame();
+            await UniTask.NextFrame(); //wait for the next frame to ensure the navmesh obstacle is disabled (avoid failure in pathfinding)
             
             bool success = TryMovePassengerToPrimaryGrid(passenger);
             if (success)

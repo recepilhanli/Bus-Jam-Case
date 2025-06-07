@@ -11,10 +11,10 @@ namespace Game.Level
 
     public partial class Passenger
     {
-        private const float DEFAULT_MOVE_MIN_DURATION = .1f;
+        private const float DEFAULT_MOVE_MIN_DURATION = .05f;
         private const float DEFAULT_MOVE_MAX_DURATION = .85f;
-        private const float DEFAULT_MOVE_MAX_DISTANCE = 15f;
-        private const float DEFAULT_MOVE_MIN_DISTANCE = 1f;
+        private const float DEFAULT_MOVE_MAX_DISTANCE = 12f;
+        private const float DEFAULT_MOVE_MIN_DISTANCE = 0.1f;
         private const Ease DEFAULT_MOVE_EASE = Ease.Linear;
 
         private static NavMeshPath _navMeshPath = null;

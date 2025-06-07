@@ -10,6 +10,8 @@ namespace Game.Level
         public event Action onGameStarted;
         public event Action onGamePaused;
 
+        public event Action<float> onTimerChanged;
+
         public event Action<Bus> onActiveBusArrived;
         public event Action<Bus> onOldActiveBusLeft;
         

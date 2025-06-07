@@ -97,6 +97,10 @@ namespace Game.Level
 
             LoadBuses(in levelContainer.busData);
 
+            float initialTime = levelContainer.timeConstraint;
+            InitTimer(initialTime);
+
+
             CheckSecondaryGridFrontLine();
         }
 

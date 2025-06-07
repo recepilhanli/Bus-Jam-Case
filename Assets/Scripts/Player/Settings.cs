@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PrimeTween;
 using UnityEngine;
 
 
@@ -20,6 +21,8 @@ namespace Game.Player
         {
 #if UNITY_EDITOR
             Application.targetFrameRate = 60;
+            PrimeTweenConfig.warnEndValueEqualsCurrent = false; 
+            PrimeTweenConfig.warnTweenOnDisabledTarget = false;
 #endif
         }
 
