@@ -4308,6 +4308,7 @@ MonoBehaviour:
   secondaryGrid: {fileID: 887170653}
   mainCamera: {fileID: 330585545}
   playerInput: {fileID: 266118763}
+  _editMode: 0
   markPassengerMaterial: {fileID: 2100000, guid: 60da7bda720c0264cb182dfa95ff389a,
     type: 2}
   _remainingTime: 0

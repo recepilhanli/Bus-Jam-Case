@@ -64,6 +64,10 @@ namespace Game.Data
 
         public static void SavePlayerState()
         {
+#if UNITY_EDITOR
+            if (!SceneHelper.isGameScene && !SceneHelper.isHomeScene) return;
+#endif
+
             PlayerStateData playerStateData = PlayerStateData.GetCurrentData();
             Save(playerStateData, FILENAME_STATS);
         }
@@ -74,6 +78,8 @@ namespace Game.Data
         public static void SaveCurrentGame()
         {
 
+
+
 #if UNITY_EDITOR
             if (Application.isPlaying == false)
             {
@@ -82,7 +88,7 @@ namespace Game.Data
             }
 #endif
 
-            if (GameManager.instance != null)
+            if (GameManager.instance != null && SceneHelper.isGameScene)
             {
                 LevelSaveData saveData = LevelSaveData.GetCurrentLevel();
                 Save(saveData, FILENAME_CURRENTLEVEL);

@@ -15,6 +15,7 @@ namespace Game.Level
     public partial class GameManager
     {
 
+        [SerializeField,Space] private bool _editMode = true;
 
         private async UniTask InitLevels()
         {
@@ -92,7 +93,7 @@ namespace Game.Level
                 }
             }
 
-            if (SaveManager.currentLevelData != null)
+            if (SaveManager.currentLevelData != null && !_editMode)
             {
                 LoadPassengers(SaveManager.currentLevelData);
                 LoadBuses(SaveManager.currentLevelData);

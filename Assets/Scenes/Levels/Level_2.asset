@@ -43,5 +43,5 @@ MonoBehaviour:
       color: 2
     obstacles: []
   busData:
-    buses: 
+    buses: 010000000700000002000000
   timeConstraint: 120

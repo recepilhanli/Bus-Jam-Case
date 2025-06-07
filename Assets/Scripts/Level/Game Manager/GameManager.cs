@@ -10,8 +10,6 @@ namespace Game.Level
 
     public partial class GameManager : MonoSingleton<GameManager>
     {
-
-
         private async UniTaskVoid Start()
         {
             InitTapping();
