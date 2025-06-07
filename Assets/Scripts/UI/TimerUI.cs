@@ -35,7 +35,7 @@ namespace Game.UI
 
         private void OnDestroy()
         {
-            GameManager.instance.onTimerChanged -= UpdateRemainingTimeText;
+            if (GameManager.instance) GameManager.instance.onTimerChanged -= UpdateRemainingTimeText;
         }
     }
 
