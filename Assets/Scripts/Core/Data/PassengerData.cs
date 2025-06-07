@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Level;
 using Game.Utils;
 using UnityEngine;
 
@@ -19,6 +20,17 @@ namespace Game.Data
         {
             gridPosition = position;
             this.color = color;
+        }
+
+        public static PassengerData CreateFromPassenger(Passenger passenger)
+        {
+            if (passenger == null || passenger.attachedCell == null)
+            {
+                Debug.LogError("Passenger or attached cell is null, cannot create PassengerData.");
+                return new();
+            }
+
+            return new PassengerData(passenger.attachedCell.position, passenger.color);
         }
     }
 

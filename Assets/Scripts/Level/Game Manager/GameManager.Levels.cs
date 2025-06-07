@@ -29,6 +29,7 @@ namespace Game.Level
 
             onLevelCompleted += () => CompleteLevelUI.enable = true;
             onLevelFailed += () => LevelLossUI.enable = true;
+            
 
             InitLevelContainer(currentLevel);
         }

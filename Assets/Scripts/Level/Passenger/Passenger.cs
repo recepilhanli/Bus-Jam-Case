@@ -12,6 +12,8 @@ namespace Game.Level
 
     public partial class Passenger : MonoCached<Passenger>, IPoolable
     {
+        public static readonly Vector3 defaultScale = new Vector3(1f, .85f, 1f);
+        
         public GridCell attachedCell = null;
         private Bus activeBus => GameManager.instance.activeBus;
 
@@ -46,7 +48,7 @@ namespace Game.Level
             Vector3 position = cell.worldPosition;
 
             var passenger = PoolManager.GetObject<Passenger>(PoolTypes.Passenger, in position);
-            passenger.Color = color;
+            passenger.color = color;
             cell.SetPassenger(passenger);
             passenger.transform.position = position;
             return passenger;
@@ -61,7 +63,7 @@ namespace Game.Level
             Vector3 position = cell.worldPosition;
 
             var passenger = PoolManager.GetObject<Passenger>(PoolTypes.Passenger, in position);
-            passenger.Color = color;
+            passenger.color = color;
             cell.SetPassenger(passenger);
             passenger.transform.position = position;
             return passenger;

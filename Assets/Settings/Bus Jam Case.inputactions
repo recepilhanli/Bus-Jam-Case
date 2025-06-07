@@ -7,9 +7,9 @@
             "actions": [
                 {
                     "name": "Tap",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "084f12c1-7db5-49ee-aee6-6a84408ee149",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -28,7 +28,7 @@
                 {
                     "name": "",
                     "id": "9aeb0008-59bb-40b6-857b-058b1595fec8",
-                    "path": "<Touchscreen>/primaryTouch/position",
+                    "path": "<Touchscreen>/Press",
                     "interactions": "",
                     "processors": "",
                     "groups": "Touch",

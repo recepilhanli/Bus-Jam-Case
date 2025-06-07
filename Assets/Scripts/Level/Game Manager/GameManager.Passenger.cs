@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.UI;
 using Game.Utils;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -12,6 +14,15 @@ namespace Game.Level
     {
         [Header("Passenger Settings")]
         public Material markPassengerMaterial;
+
+        private static readonly Vector3 _passengerShakeStrength = new Vector3(0.5f, 0.25f, 0.5f);
+
+
+        private void InitPassengers()
+        {
+            onPlayerAttemptedToMovePassenger += AttempMovePassenger;
+        }
+
 
         /// <summary>
         /// Moves the passenger to the active bus if the bus color matches the passenger's color.
@@ -26,7 +37,7 @@ namespace Game.Level
                 return false;
             }
 
-            var passengerColor = passenger.Color;
+            var passengerColor = passenger.color;
 
             if (activeBusColor == passengerColor)
             {
@@ -51,8 +62,14 @@ namespace Game.Level
                 onLevelFailed?.Invoke();
                 Debug.LogWarning("Primary grid has no space, but the active bus has space. Level failed.");
             }
-            
+
+
             return true;
+        }
+
+        private void AttempMovePassenger(Passenger passenger, bool success)
+        {
+            if (!success) Tween.ShakeScale(passenger.transform, _passengerShakeStrength, .5f);
         }
 
         public bool RemovePassengerFromPrimaryGrid(GridCell primaryCell)
@@ -61,7 +78,7 @@ namespace Game.Level
             Debug.Assert(primaryCell.isInPrimaryGrid, "Cell is not in the primary grid.");
             var passenger = primaryCell.RemovePassenger();
             passenger.MoveToActiveBus();
-            Debug.Assert(passenger.Color == activeBusColor, "Passenger color does not match the active bus color.");
+            Debug.Assert(passenger.color == activeBusColor, "Passenger color does not match the active bus color.");
             return true;
         }
 

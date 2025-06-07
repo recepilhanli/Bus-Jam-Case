@@ -38,7 +38,7 @@ namespace Game.Level
 
         public void OnTap(CallbackContext context)
         {
-            Vector2 tapPosition = context.ReadValue<Vector2>();
+            Vector2 tapPosition = Touchscreen.current.primaryTouch.position.ReadValue();
             Ray ray = mainCamera.ScreenPointToRay(tapPosition);
             SendRaycast(in ray);
         }
@@ -58,11 +58,11 @@ namespace Game.Level
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, TAP_LAYER_MASK))
             {
                 GameObject gameObject = hit.collider.gameObject;
-                CheckCell(gameObject);
+                CheckCell(gameObject).Forget();
             }
         }
 
-        private async UniTask CheckCell(GameObject gameObject)
+        private async UniTaskVoid CheckCell(GameObject gameObject)
         {
             GridCell cell = GridCell.GetActualType(gameObject);
 
@@ -86,9 +86,9 @@ namespace Game.Level
                 return;
             }
 
-            cell.navMeshObstacleEnabled = false; 
+            cell.navMeshObstacleEnabled = false;
             await UniTask.NextFrame(); //wait for the next frame to ensure the navmesh obstacle is disabled (avoid failure in pathfinding)
-            
+
             bool success = TryMovePassengerToPrimaryGrid(passenger);
             if (success)
             {
@@ -104,7 +104,7 @@ namespace Game.Level
         {
             if (enable) EnableInput();
             else DisableInput();
-        } 
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void DisableInput()

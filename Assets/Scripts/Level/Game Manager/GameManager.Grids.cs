@@ -25,7 +25,7 @@ namespace Game.Level
                 if (cell.isEmpty) continue;
                 Passenger passenger = cell.passenger;
                 Debug.Assert(passenger != null, "Primary grid cell has a passenger but it's null.");
-                if (passenger.Color == arrivedBus.color)
+                if (passenger.color == arrivedBus.color)
                 {
                     RemovePassengerFromPrimaryGrid(cell);
                     totalMovedPassengers++;
@@ -37,12 +37,18 @@ namespace Game.Level
         [ContextMenu("Check Secondary Grid Front Line")]
         public void CheckSecondaryGridFrontLine()
         {
-            int y = secondaryGrid.height - 1;
-            for (int x = 0; x < secondaryGrid.width; x++)
+            int totalMarkedPassengers = 0;
+
+            for (int y = 0; y < secondaryGrid.height; y++)
             {
-                var cell = secondaryGrid.cells[x, y];
-                if (cell.isEmpty) continue;
-                cell.passenger.MarkPassenger();
+                for (int x = 0; x < secondaryGrid.width; x++)
+                {
+                    var cell = secondaryGrid.cells[x, y];
+                    if (!cell.hasSpaceToMove) continue;
+                    cell.passenger.MarkPassenger();
+                    totalMarkedPassengers++;
+                    if (totalMarkedPassengers >= secondaryGrid.width) break;
+                }
             }
         }
 
