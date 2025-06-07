@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Game;
 using Game.Level.Pooling;
 using Game.Utils;
@@ -27,16 +28,15 @@ namespace Game.Level
         public void OnDespawn()
         {
             gameObject.SetActive(false);
-            for (int i = 0; i < passengers.Length; i++)
-            {
-                passengers[i] = null;
-            }
-
-            if (_currentTween.isAlive) _currentTween.Stop();
-
-            _totalPassengersInBus = 0;
+            ReleasePassengers();
+            ReleaseCurrentTween();
         }
 
+        private void ReleaseCurrentTween()
+        {
+            if (_currentTween.isAlive) _currentTween.Stop();
+        }
+        
         public void ReturnToPool() => PoolManager.GetPool(PoolTypes.Bus).ReturnToPool(this);
 
         public static Bus GetFromPool(in Vector3 position, ColorList color)

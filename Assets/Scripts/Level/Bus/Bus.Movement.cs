@@ -28,7 +28,7 @@ namespace Game.Level
 
         public Tween Move(in Vector3 targetPosition)
         {
-            if (_currentTween.isAlive) _currentTween.Stop();
+            ReleaseCurrentTween();
             _currentTween = Tween.Position(transform, targetPosition, DEFAULT_MOVEMENT_DURATION, DEFAULT_MOVEMENT_EASE);
             return _currentTween;
         }
@@ -54,5 +54,6 @@ namespace Game.Level
                 Debug.Log($"Active bus {name} arrived at its destination. Color: {color}");
             }
         }
+
     }
 }
