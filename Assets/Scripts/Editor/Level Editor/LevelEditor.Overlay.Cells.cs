@@ -61,6 +61,9 @@ namespace Game.OnlyEditor
             {
                 if (_selectedCells.Count > 0)
                 {
+
+                    if (!_levelEditor || _selectedCells.Count == 0 || !_levelEditor.selectedLevelContainer) return;
+
                     var type = (EditorCellType)evt.newValue;
                     if (type == EditorCellType.Primary)
                     {
@@ -68,10 +71,14 @@ namespace Game.OnlyEditor
                         _cellTypeField.value = type; // Reset to empty if primary is selected
                         Debug.LogWarning("Primary cell type cannot be selected. Resetting to Empty.");
                     }
+
                     foreach (var cell in _selectedCells)
                     {
                         cell.cellType = type;
                     }
+
+                    _levelEditor.selectedLevelContainer.MakeDirtyEditor();
+
                     UpdateSelectedCell();
                 }
             });
@@ -159,10 +166,14 @@ namespace Game.OnlyEditor
                 _colorButtons[i] = new Button(() =>
                 {
 
+                    if (!_levelEditor || _selectedCells.Count == 0 || !_levelEditor.selectedLevelContainer) return;
+
                     foreach (var cell in _selectedCells)
                     {
                         cell.passengerColor = colorType;
                     }
+
+                    _levelEditor.selectedLevelContainer.MakeDirtyEditor();
 
                 })
                 {

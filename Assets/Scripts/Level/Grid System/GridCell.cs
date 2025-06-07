@@ -13,22 +13,51 @@ namespace Game.Level
     {
         private static Vector2Int[] _directions => Grid.directions;
 
-        public bool isObstacle = false;
-        public bool isInPrimaryGrid = false;
         public Collider cellCollider;
+        public Renderer cellRenderer;
         public NavMeshObstacle navMeshObstacle;
+
 
         [Header("Read-Only Values")]
         [SerializeField] private Vector2Int _position;
-
         [SerializeField] private Passenger _passenger;
+        [SerializeField] private bool _isObstacle = false;
+        [SerializeField] private bool _isInPrimaryGrid = false;
 
         public Vector2Int position { get => _position; }
         public Passenger passenger { get => _passenger; }
-        public bool isEmpty => _passenger == null;
+        public bool isEmpty => _passenger == null && !isObstacle;
 
         public Grid attachedGrid => isInPrimaryGrid ? GameManager.instance.primaryGrid : GameManager.instance.secondaryGrid;
         public Vector3 worldPosition => attachedGrid.GetCellWorldPosition(_position);
+
+        public bool navMeshObstacleEnabled
+        {
+            get => navMeshObstacle.enabled;
+            set => navMeshObstacle.enabled = value;
+        }
+
+        public bool isObstacle
+        {
+            get => _isObstacle;
+            set
+            {
+                if (_isObstacle == value) return;
+                cellCollider.enabled = !value;
+                cellRenderer.enabled = !value;
+            }
+        }
+
+        public bool isInPrimaryGrid
+        {
+            get => _isInPrimaryGrid;
+            set
+            {
+                if (_isInPrimaryGrid == value) return;
+                _isInPrimaryGrid = value;
+                navMeshObstacleEnabled = !value;
+            }
+        }
 
         public void SetPassenger(Passenger passenger)
         {
@@ -85,6 +114,7 @@ namespace Game.Level
             _passenger = null;
             _position = Vector2Int.zero;
             isObstacle = false;
+            navMeshObstacleEnabled = true;
         }
 
         public void ReturnToPool() => PoolManager.GetPool(PoolTypes.GridCell).ReturnToPool(this);

@@ -22,7 +22,48 @@ MonoBehaviour:
     padding: {x: 0, y: 0}
     spacing: {x: 1, y: 1}
     cellSize: 1
-    passengers: []
+    passengers:
+    - gridPosition: {x: 0, y: 0}
+      color: 0
+    - gridPosition: {x: 1, y: 0}
+      color: 0
+    - gridPosition: {x: 2, y: 0}
+      color: 0
+    - gridPosition: {x: 3, y: 0}
+      color: 0
+    - gridPosition: {x: 3, y: 1}
+      color: 2
+    - gridPosition: {x: 2, y: 1}
+      color: 2
+    - gridPosition: {x: 1, y: 1}
+      color: 2
+    - gridPosition: {x: 0, y: 1}
+      color: 2
+    - gridPosition: {x: 3, y: 2}
+      color: 8
+    - gridPosition: {x: 2, y: 2}
+      color: 8
+    - gridPosition: {x: 1, y: 2}
+      color: 8
+    - gridPosition: {x: 0, y: 2}
+      color: 8
+    - gridPosition: {x: 3, y: 3}
+      color: 3
+    - gridPosition: {x: 2, y: 3}
+      color: 3
+    - gridPosition: {x: 1, y: 3}
+      color: 3
+    - gridPosition: {x: 0, y: 4}
+      color: 4
+    - gridPosition: {x: 1, y: 4}
+      color: 4
+    - gridPosition: {x: 2, y: 4}
+      color: 4
+    - gridPosition: {x: 3, y: 4}
+      color: 4
+    - gridPosition: {x: 0, y: 3}
+      color: 4
     obstacles: []
   busData:
     buses: 0400000003000000020000000100000000000000
+  timeConstraint: 60

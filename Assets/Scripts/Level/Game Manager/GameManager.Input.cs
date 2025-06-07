@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -61,7 +62,7 @@ namespace Game.Level
             }
         }
 
-        private void CheckCell(GameObject gameObject)
+        private async UniTask CheckCell(GameObject gameObject)
         {
             GridCell cell = GridCell.GetActualType(gameObject);
 
@@ -85,6 +86,10 @@ namespace Game.Level
                 return;
             }
 
+            cell.navMeshObstacleEnabled = false; 
+
+            await UniTask.NextFrame();
+            
             bool success = TryMovePassengerToPrimaryGrid(passenger);
             if (success)
             {

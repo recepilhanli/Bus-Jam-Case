@@ -5,6 +5,7 @@ using Game.Level.Pooling;
 using Game.Utils;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Game.Level
 {
@@ -14,6 +15,10 @@ namespace Game.Level
         public GridCell attachedCell = null;
         private Bus activeBus => GameManager.instance.activeBus;
 
+        private void Start()
+        {
+            _navMeshPath ??= new NavMeshPath();
+        }
 
         #region Pooling
         public void OnSpawn()
@@ -27,6 +32,7 @@ namespace Game.Level
             gameObject.SetActive(false);
             transform.SetParent(PoolManager.poolParent, true);
             Tween.StopAll(transform);
+            if (_movementSequence.isAlive) _movementSequence.Stop();
             UnmarkPassenger();
         }
 

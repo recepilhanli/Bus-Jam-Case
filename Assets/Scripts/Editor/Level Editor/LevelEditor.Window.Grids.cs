@@ -177,6 +177,8 @@ namespace Game.OnlyEditor
                 _levelEditor.selectedLevelContainer.ChangePrimaryGrid(data);
             else
                 _levelEditor.selectedLevelContainer.ChangeSecondaryGrid(data);
+
+            _levelEditor.selectedLevelContainer.MakeDirtyEditor();
         }
 
         public void UpdateGridData()

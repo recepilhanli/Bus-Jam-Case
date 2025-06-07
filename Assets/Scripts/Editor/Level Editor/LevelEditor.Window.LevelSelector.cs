@@ -31,7 +31,7 @@ namespace Game.OnlyEditor
             }
 
             LevelContainerSelectorWindow window = GetWindow<LevelContainerSelectorWindow>("Level Container Selector");
-            window.minSize = new Vector2(400, 50);
+            window.minSize = new Vector2(400, 65);
             window.maxSize = window.minSize;
             window.Show();
         }
@@ -48,7 +48,7 @@ namespace Game.OnlyEditor
 
         private void OnGUI()
         {
-            GUILayout.Label("This is the Level Container Editor Window", EditorStyles.boldLabel);
+            GUILayout.Label("To edit level containers, please select a level container from the list (click (o) button) below.", EditorStyles.wordWrappedLabel);
             if (_levelEditor == null)
             {
                 _levelEditor = LevelEditor.instance;

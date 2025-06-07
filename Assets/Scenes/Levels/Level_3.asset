@@ -26,3 +26,4 @@ MonoBehaviour:
     obstacles: []
   busData:
     buses: 
+  timeConstraint: 60

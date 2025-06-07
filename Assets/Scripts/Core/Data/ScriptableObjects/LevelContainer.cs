@@ -21,6 +21,15 @@ namespace Game.Data
         {
             GridData.Copy(newGridData, secondaryGrid);
         }
+
+#if UNITY_EDITOR
+        public void MakeDirtyEditor()
+        {
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssetIfDirty(this);
+        }
+#endif
+
     }
 
 }

@@ -98,12 +98,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa78ca6fd0d1be48866fa5e894e59b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isObstacle: 0
   isInPrimaryGrid: 0
   cellCollider: {fileID: 5982179169581442083}
+  cellRenderer: {fileID: 6269478066928002192}
   navMeshObstacle: {fileID: 785472674112425726}
   _position: {x: 0, y: 0}
   _passenger: {fileID: 0}
+  _isObstacle: 0
 --- !u!65 &5982179169581442083
 BoxCollider:
   m_ObjectHideFlags: 0

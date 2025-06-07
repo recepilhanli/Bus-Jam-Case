@@ -96,6 +96,7 @@ namespace Game.OnlyEditor
                 if (_levelEditor && _levelEditor.selectedLevelContainer)
                 {
                     _levelEditor.selectedLevelContainer.timeConstraint = evt.newValue;
+                    _levelEditor.selectedLevelContainer.MakeDirtyEditor();
                 }
             });
 
