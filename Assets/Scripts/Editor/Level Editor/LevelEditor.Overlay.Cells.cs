@@ -61,6 +61,12 @@ namespace Game.OnlyEditor
                 if (_selectedCell != null)
                 {
                     var type = (EditorCellType)evt.newValue;
+                    if (type == EditorCellType.Primary)
+                    {
+                        type = EditorCellType.Empty;
+                        _cellTypeField.value = type; // Reset to empty if primary is selected
+                        Debug.LogWarning("Primary cell type cannot be selected. Resetting to Empty.");
+                    }
                     _selectedCell.cellType = type;
                     UpdateSelectedCell();
                 }

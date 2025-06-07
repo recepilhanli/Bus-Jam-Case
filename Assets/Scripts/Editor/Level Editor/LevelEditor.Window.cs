@@ -70,10 +70,10 @@ namespace Game.OnlyEditor
 
             CreateGridPanelContent();
             CreateCellPanelContent();
+            CreateBusPanelContent();
 
             UpdateWindow();
             UpdateGridData();
-
         }
 
 
@@ -89,14 +89,17 @@ namespace Game.OnlyEditor
                 case 0:
                     _gridOverlayRoot.style.display = DisplayStyle.Flex;
                     _cellsOverlayRoot.style.display = DisplayStyle.None;
+                    _busOverlayRoot.style.display = DisplayStyle.None;
                     break;
                 case 1:
-                    _cellsOverlayRoot.style.display = DisplayStyle.Flex;
                     _gridOverlayRoot.style.display = DisplayStyle.None;
+                    _cellsOverlayRoot.style.display = DisplayStyle.Flex;
+                    _busOverlayRoot.style.display = DisplayStyle.None;
                     break;
                 case 2:
-                    _cellsOverlayRoot.style.display = DisplayStyle.None;
                     _gridOverlayRoot.style.display = DisplayStyle.None;
+                    _cellsOverlayRoot.style.display = DisplayStyle.None;
+                    _busOverlayRoot.style.display = DisplayStyle.Flex;
                     break;
             }
 

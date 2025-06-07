@@ -79,10 +79,6 @@ namespace Game.OnlyEditor
             _cellsScrollView.Add(primaryLabel);
             _cellsScrollView.Add(secondaryLabel);
 
-            int maxPrimaryCellWidth = _levelEditor.selectedLevelContainer.primaryGrid.gridSize.x;
-            int maxSecondaryCellWidth = _levelEditor.selectedLevelContainer.secondaryGrid.gridSize.x;
-
-            int currentWidth = 0;
 
             var scroll = new ScrollView(ScrollViewMode.Horizontal);
             scroll.style.overflow = Overflow.Visible;
@@ -91,12 +87,30 @@ namespace Game.OnlyEditor
 
             _cellsScrollView.Add(scroll);
 
+            if (primaryCells == null || primaryCells.Length == 0)
+            {
+                Debug.LogWarning("Primary cells are empty or null.");
+                return;
+            }
+
+            if (secondaryCells == null || secondaryCells.Length == 0)
+            {
+                Debug.LogWarning("Secondary cells are empty or null.");
+                return;
+            }
+
+
+            int maxPrimaryCellWidth = primaryCells.GetLength(0);
+            int maxSecondaryCellWidth = secondaryCells.GetLength(0);
+            int secondaryHeight = secondaryCells.GetLength(1);
+            int currentWidth = 0;
+
+
             //primary 
             foreach (var cell in primaryCells)
             {
                 if (!cell) continue;
 
-                if (cell.cellType != EditorCellType.Primary) continue;
                 if (currentWidth >= maxPrimaryCellWidth)
                 {
                     currentWidth = 0;
@@ -114,25 +128,27 @@ namespace Game.OnlyEditor
             scroll = CreateHorizontalScrollView();
             currentWidth = 0;
 
+
+
             //secondary
-            foreach (var cell in secondaryCells)
+            for (int y = secondaryHeight - 1; y >= 0; y--)
             {
-                if (!cell) continue;
-
-                if (cell.cellType == EditorCellType.Primary) continue;
-                if (currentWidth >= maxSecondaryCellWidth)
+                scroll = CreateHorizontalScrollView();
+                for (int x = 0; x < maxSecondaryCellWidth; x++)
                 {
-                    currentWidth = 0;
-                    scroll = CreateHorizontalScrollView();
-                }
+                    var cell = secondaryCells[x, y];
+                    if (!cell) continue;
 
-                Button selectButton = CreateCellButton(cell);
-                scroll.Add(selectButton);
-                currentWidth++;
+                    Button selectButton = CreateCellButton(cell);
+                    scroll.Add(selectButton);
+                    currentWidth++;
+                }
             }
 
-
         }
+
+
+
 
 
         private Button CreateCellButton(EditorGridCell cell)

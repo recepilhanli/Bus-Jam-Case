@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81613feb3d9e38946aaf7813b314b298, type: 3}
-  m_Name: Level_3
+  m_Name: Level_6
   m_EditorClassIdentifier: 
   primaryGrid:
-    gridSize: {x: 1, y: 5}
+    gridSize: {x: 5, y: 1}
     padding: {x: 0, y: 0}
     spacing: {x: 0.5, y: 0}
     cellSize: 1
   secondaryGrid:
-    gridSize: {x: 5, y: 5}
+    gridSize: {x: 4, y: 5}
     padding: {x: 0, y: 0}
     spacing: {x: 1, y: 1}
     cellSize: 1
