@@ -27,10 +27,12 @@ namespace Game.Level
         private Bus _activeBus;
         private Bus _nextBus;
         private Bus _reservedBus;
-        private int _currentColorIndex = 0;
+        private int _currentBusIndex = 0;
 
         private bool _wasActiveBusArrived = false;
 
+        public int currentBusIndex => _currentBusIndex;
+      
 
         public Bus activeBus
         {
@@ -57,12 +59,12 @@ namespace Game.Level
                     _nextBus = null;
                     return;
                 }
-                else if (_currentColorIndex + 1 >= busList.Count) return;
+                else if (_currentBusIndex + 1 >= busList.Count) return;
 
                 _nextBus = value;
                 _nextBus.gameObject.SetActive(true);
                 _nextBus.transform.position = busSpawnPosition.position;
-                _nextBus.color = busList[_currentColorIndex + 1];
+                _nextBus.color = busList[_currentBusIndex + 1];
                 _nextBus.Move(nextBusPosition.position);
             }
         }
@@ -86,16 +88,16 @@ namespace Game.Level
 
         public void ActivateNextBus()
         {
-            _currentColorIndex++;
+            _currentBusIndex++;
             var oldReservedBus = _reservedBus;
             _reservedBus = activeBus;
             _reservedBus.Move(busDisappearPosition.position).OnComplete(_reservedBus, DispatchOldActiveBusLeftEvent);
             Debug.Log($"Bus {_reservedBus.name} left the station. Color: {_reservedBus.color}");
 
-            if (_currentColorIndex >= busList.Count)
+            if (_currentBusIndex >= busList.Count)
             {
                 onLevelCompleted?.Invoke();
-                _currentColorIndex = 0; // Reset to loop through colors
+                _currentBusIndex = 0; // Reset to loop through colors
                 Debug.Log("All buses have left. Level completed.");
                 return;
             }
@@ -110,7 +112,7 @@ namespace Game.Level
         {
             busList.Clear();
             busList.AddRange(data.buses);
-            _currentColorIndex = 0;
+            _currentBusIndex = 0;
 
             if (busList.Count == 0)
             {
@@ -120,25 +122,31 @@ namespace Game.Level
 
             if (_activeBus)
             {
-                activeBus.color = busList[_currentColorIndex];
+                activeBus.color = busList[_currentBusIndex];
                 activeBus.transform.position = activeBusPosition.position;
             }
-            else activeBus = Bus.GetFromPool(activeBusPosition.position, busList[_currentColorIndex]);
+            else activeBus = Bus.GetFromPool(activeBusPosition.position, busList[_currentBusIndex]);
 
             if (_nextBus && busList.Count > 1)
             {
-                nextBus.color = busList[_currentColorIndex + 1];
+                nextBus.color = busList[_currentBusIndex + 1];
                 nextBus.transform.position = nextBusPosition.position;
             }
-            else if (busList.Count > 1) _nextBus = Bus.GetFromPool(nextBusPosition.position, busList[_currentColorIndex + 1]);
+            else if (busList.Count > 1) _nextBus = Bus.GetFromPool(nextBusPosition.position, busList[_currentBusIndex + 1]);
             else _nextBus = Bus.GetFromPool(busSpawnPosition.position, ColorList.White);
 
-            if (_reservedBus && busList.Count > 2) _reservedBus.color = busList[_currentColorIndex + 2];
-            else if (busList.Count > 2) _reservedBus = Bus.GetFromPool(busSpawnPosition.position, busList[_currentColorIndex + 2]);
+            if (_reservedBus && busList.Count > 2) _reservedBus.color = busList[_currentBusIndex + 2];
+            else if (busList.Count > 2) _reservedBus = Bus.GetFromPool(busSpawnPosition.position, busList[_currentBusIndex + 2]);
             else _reservedBus = Bus.GetFromPool(busSpawnPosition.position, ColorList.White);
 
             _activeBus.ShakeBus();
             _wasActiveBusArrived = true;
+        }
+
+        private void LoadBuses(LevelSaveData levelSaveData)
+        {
+            if (levelSaveData == null) return;
+            LoadBuses(levelSaveData.remainingBuses);
         }
 
     }

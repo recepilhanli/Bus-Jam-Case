@@ -28,11 +28,12 @@ namespace Game.Level
             }
 
             onLevelCompleted += () => CompleteLevelUI.enable = true;
-            onLevelFailed += () => LevelLossUI.enable = true;
+            onLevelFailed += HandleLevelLoss;
 
 
             InitLevelContainer(currentLevel);
         }
+
 
         public void GetNextLevel()
         {
@@ -76,15 +77,7 @@ namespace Game.Level
             primaryGrid.Init(levelContainer.primaryGrid);
             secondaryGrid.Init(levelContainer.secondaryGrid);
 
-            var passengers = levelContainer.secondaryGrid.passengers;
-            if (passengers != null)
-            {
-                foreach (var passengerData in passengers)
-                {
-                    var pos = passengerData.gridPosition;
-                    if (secondaryGrid.IsValidPosition(pos)) Passenger.GetFromPool(pos, passengerData.color);
-                }
-            }
+
 
             var obstacles = levelContainer.secondaryGrid.obstacles;
             if (obstacles != null)
@@ -96,14 +89,23 @@ namespace Game.Level
                 }
             }
 
-            LoadBuses(in levelContainer.busData);
+            if (SaveManager.currentLevelData != null)
+            {
+                LoadPassengers(SaveManager.currentLevelData);
+                LoadBuses(SaveManager.currentLevelData);
+            }
+            else
+            {
+                LoadPassengers(levelContainer);
+                LoadBuses(in levelContainer.busData);
+            }
 
             float initialTime = levelContainer.timeConstraint;
             InitTimer(initialTime);
 
-
             CheckSecondaryGridFrontLine();
         }
+
 
         public void RestartLevel()
         {
@@ -115,6 +117,9 @@ namespace Game.Level
                 Debug.Log("No remaining lives. Returning to home.");
                 ReturnToHome();
             }
+
+            SaveManager.SavePlayerState();
+            SaveManager.DeleteCurrentLevel();
         }
 
         [ContextMenu("Return to Home")]
@@ -124,7 +129,20 @@ namespace Game.Level
             FadeUI.FadeIn(5f).OnComplete(ReturnHome);
         }
 
-        private void ReturnHome() => SceneHelper.LoadScene(SceneHelper.HOME_SCENE_INDEX);
+        private void ReturnHome()
+        {
+            SaveManager.SavePlayerState();
+            SaveManager.DeleteCurrentLevel();
+            SceneHelper.LoadScene(SceneHelper.HOME_SCENE_INDEX);
+        }
+
+        private void HandleLevelLoss()
+        {
+            LevelLossUI.enable = true;
+            StopTimer();
+            SaveManager.SavePlayerState();
+            SaveManager.DeleteCurrentLevel();
+        }
 
 
 

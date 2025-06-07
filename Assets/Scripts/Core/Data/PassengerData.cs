@@ -24,13 +24,22 @@ namespace Game.Data
 
         public static PassengerData CreateFromPassenger(Passenger passenger)
         {
-            if (passenger == null || passenger.attachedCell == null)
+            return CreateFromPassenger(passenger, passenger.attachedCell);
+        }
+
+        public static PassengerData CreateFromPassenger(Passenger passenger, GridCell attachedCell)
+        {
+            if (passenger == null || attachedCell == null)
             {
-                Debug.LogError("Passenger or attached cell is null, cannot create PassengerData.");
+                Debug.LogError($"Passenger or attached cell is null, cannot create PassengerData.");
+                if (passenger != null)
+                {
+                    Debug.LogError($"Passenger color: {passenger.color}, position: {passenger.transform.position}, instanceId: {passenger.GetInstanceID()}");
+                }
                 return new();
             }
 
-            return new PassengerData(passenger.attachedCell.position, passenger.color);
+            return new PassengerData(attachedCell.position, passenger.color);
         }
     }
 

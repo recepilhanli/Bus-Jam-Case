@@ -24,7 +24,7 @@ namespace Game.Level
 
         public void Reset()
         {
-            _currentColorIndex = 0;
+            _currentBusIndex = 0;
             _wasActiveBusArrived = false;
             _nextBus = null;
             _activeBus = null;

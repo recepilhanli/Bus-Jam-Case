@@ -45,6 +45,7 @@ namespace Game.Level
                 {
                     var cell = secondaryGrid.cells[x, y];
                     if (!cell.hasSpaceToMove) continue;
+                    else if (cell.isEmpty) continue;
                     cell.passenger.MarkPassenger();
                     totalMarkedPassengers++;
                     if (totalMarkedPassengers >= secondaryGrid.width) break;

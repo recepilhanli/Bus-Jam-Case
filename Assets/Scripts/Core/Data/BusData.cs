@@ -20,7 +20,13 @@ namespace Game.Data
             if (GameManager.instance == null) return data;
             var manager = GameManager.instance;
             data.buses = new List<ColorList>();
-            data.buses.AddRange(manager.busList);
+            for(int i = 0; i < manager.busList.Count; i++)
+            {
+                if(manager.currentBusIndex > i) continue; // Skip old buses that the player already passed
+                var bus = manager.busList[i];
+                data.buses.Add(bus);
+            }
+            
             return data;
         }
     }

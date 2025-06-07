@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.Data
 {
-    public class SaveManager //TO DO: Convert this to binary save system
+    public class SaveManager //TO DO: Convert this to binary save system and add safety checks
     {
 
         private const string FILENAME_CURRENTLEVEL = "currentLevel";
@@ -62,6 +62,12 @@ namespace Game.Data
             }
         }
 
+        public static void SavePlayerState()
+        {
+            PlayerStateData playerStateData = PlayerStateData.GetCurrentData();
+            Save(playerStateData, FILENAME_STATS);
+        }
+
 #if UNITY_EDITOR
         [UnityEditor.MenuItem("Debug/Save/Save Current Game")]
 #endif
@@ -83,8 +89,7 @@ namespace Game.Data
             }
             else DeleteSaveFile(FILENAME_CURRENTLEVEL);
 
-            PlayerStateData playerStateData = PlayerStateData.GetCurrentData();
-            Save(playerStateData, FILENAME_STATS);
+            SavePlayerState();
         }
 
 #if UNITY_EDITOR
@@ -103,14 +108,23 @@ namespace Game.Data
 
             currentLevelData = Load<LevelSaveData>(FILENAME_CURRENTLEVEL);
             PlayerStateData playerStateData = Load<PlayerStateData>(FILENAME_STATS);
-            playerStateData?.Apply();
+            if (playerStateData != null) playerStateData.Apply();
+            else
+            {
+                playerStateData = PlayerStateData.GetCurrentData();
+                Save(playerStateData, FILENAME_STATS);
+                Debug.LogWarning("Player state data not found. Created a new one. [First time playing]");
+            }
             return;
         }
 
         public static void DeleteCurrentLevel()
         {
+            currentLevelData = null;
             DeleteSaveFile(FILENAME_CURRENTLEVEL);
         }
+
+
 
     }
 

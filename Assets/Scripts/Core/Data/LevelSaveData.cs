@@ -19,21 +19,22 @@ namespace Game.Data
 
             var primaryGridPassengers = new List<PassengerData>();
             var secondaryGridPassengers = new List<PassengerData>();
-            
+
             var primaryGrid = manager.primaryGrid;
             var secondaryGrid = manager.secondaryGrid;
 
 
             foreach (var cell in primaryGrid.cells)
             {
-                PassengerData passengerData = PassengerData.CreateFromPassenger(cell.passenger);
+                if (cell.isEmpty) continue;
+                PassengerData passengerData = PassengerData.CreateFromPassenger(cell.passenger, cell);
                 primaryGridPassengers.Add(passengerData);
             }
 
             foreach (var cell in secondaryGrid.cells)
             {
                 if (cell.isEmpty) continue;
-                PassengerData passengerData = PassengerData.CreateFromPassenger(cell.passenger);
+                PassengerData passengerData = PassengerData.CreateFromPassenger(cell.passenger, cell);
                 secondaryGridPassengers.Add(passengerData);
             }
 

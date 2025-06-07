@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Data;
 using Game.UI;
 using Game.Utils;
 using PrimeTween;
@@ -66,6 +67,48 @@ namespace Game.Level
 
             return true;
         }
+
+        private void LoadPassengers(LevelContainer levelContainer)
+        {
+            var passengers = levelContainer.secondaryGrid.passengers;
+            if (passengers != null)
+            {
+                foreach (var passengerData in passengers)
+                {
+                    var pos = passengerData.gridPosition;
+                    if (secondaryGrid.IsValidPosition(pos)) Passenger.GetFromPool(pos, passengerData.color);
+                }
+            }
+        }
+
+        public void LoadPassengers(LevelSaveData levelSaveData)
+        {
+            if (levelSaveData == null) return;
+            var primaryPassengers = levelSaveData.primaryGridPassengers;
+
+            if (primaryPassengers != null)
+            {
+                foreach (var passengerData in primaryPassengers)
+                {
+                    var pos = passengerData.gridPosition;
+                    if (primaryGrid.IsValidPosition(pos)) Passenger.GetFromPool(primaryGrid.cells[pos.x, pos.y], passengerData.color);
+                }
+            }
+
+            var secondaryPassengers = levelSaveData.secondaryGridPassengers;
+            if (secondaryPassengers != null)
+            {
+                foreach (var passengerData in secondaryPassengers)
+                {
+                    var pos = passengerData.gridPosition;
+                    if (secondaryGrid.IsValidPosition(pos)) Passenger.GetFromPool(secondaryGrid.cells[pos.x, pos.y], passengerData.color);
+                }
+            }
+        }
+
+
+
+
 
         private void AttempMovePassenger(Passenger passenger, bool success)
         {
