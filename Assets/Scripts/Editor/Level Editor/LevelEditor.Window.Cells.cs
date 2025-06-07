@@ -196,6 +196,13 @@ namespace Game.OnlyEditor
             Button selectButton = new Button(() =>
           {
 
+              if (cell == null)
+              {
+                  RefreshMarks();
+                  return;
+              }
+
+
               if (!_multipleCellSelection)
               {
                   Selection.activeGameObject = cell.gameObject;
@@ -217,9 +224,9 @@ namespace Game.OnlyEditor
                   else
                   {
                       var selectedObjects = new List<UnityEngine.Object>()
-                      {
-                          cell.gameObject
-                      };
+                            {
+                                cell.gameObject
+                            };
                       selectedObjects.AddRange(Selection.objects);
                       MarkCellButton(cell);
 

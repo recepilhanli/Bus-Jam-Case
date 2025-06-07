@@ -30,17 +30,19 @@ namespace Game.OnlyEditor
 
         private void SelectButton(int index)
         {
+            if (!CheckLevelContainer()) return;
+
             for (int i = 0; i < _toolButtons.Length; i++)
-            {
-                if (i == index)
                 {
-                    _toolButtons[i].style.backgroundColor = new StyleColor(_selectedButtonColor);
+                    if (i == index)
+                    {
+                        _toolButtons[i].style.backgroundColor = new StyleColor(_selectedButtonColor);
+                    }
+                    else
+                    {
+                        _toolButtons[i].style.backgroundColor = new StyleColor(_defaultButtonColor);
+                    }
                 }
-                else
-                {
-                    _toolButtons[i].style.backgroundColor = new StyleColor(_defaultButtonColor);
-                }
-            }
 
             _selectedButtonIndex = index;
             UpdateWindow();

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using Game.Data;
 using Game.Level;
 using UnityEditor;
@@ -17,9 +16,6 @@ namespace Game.OnlyEditor
 
         private VisualElement _gridOverlayRoot;
         private List<GridPanel> _gridPanels = new List<GridPanel>();
-
-
-
 
         private void CreateGridPanelContent()
         {
@@ -63,7 +59,7 @@ namespace Game.OnlyEditor
             {
                 attachedData = data
             };
-            
+
             _gridPanels.Add(gridPanel);
 
             gridPanel.gridSizeField = new Vector2IntField("Grid Size")
@@ -76,6 +72,13 @@ namespace Game.OnlyEditor
             };
             gridPanel.gridSizeField.RegisterValueChangedCallback(evt =>
             {
+                if (!_levelEditor || !_levelEditor.selectedLevelContainer)
+                {
+                    gridPanel.gridSizeField.value = new Vector2Int(1, 1);
+                    Debug.LogWarning("No level container assign. Cannot change grid size.");
+                    return;
+                }
+
                 Vector2Int newSize = evt.newValue;
 
                 if (newSize.x < 1 || newSize.y < 1)
@@ -105,6 +108,13 @@ namespace Game.OnlyEditor
             };
             gridPanel.paddingField.RegisterValueChangedCallback(evt =>
              {
+                 if (!_levelEditor || !_levelEditor.selectedLevelContainer)
+                 {
+                     gridPanel.paddingField.value = Vector2.zero;
+                     Debug.LogWarning("No level container assign. Cannot change grid padding.");
+                     return;
+                 }
+
                  data.padding = evt.newValue;
                  bool isPrimaryGrid = data == _primaryGridData;
                  SaveGrid(isPrimaryGrid, data);
@@ -122,6 +132,14 @@ namespace Game.OnlyEditor
             };
             gridPanel.spacingField.RegisterValueChangedCallback(evt =>
              {
+                 if (!_levelEditor || !_levelEditor.selectedLevelContainer)
+                 {
+                     gridPanel.spacingField.value = Vector2.zero;
+                     Debug.LogWarning("No level container assign. Cannot change grid spacing.");
+                     return;
+                 }
+
+
                  data.spacing = evt.newValue;
                  bool isPrimaryGrid = data == _primaryGridData;
                  SaveGrid(isPrimaryGrid, data);
@@ -139,6 +157,13 @@ namespace Game.OnlyEditor
             };
             gridPanel.cellSizeField.RegisterValueChangedCallback(evt =>
             {
+                if (!_levelEditor || !_levelEditor.selectedLevelContainer)
+                {
+                    gridPanel.cellSizeField.value = 1f;
+                    Debug.LogWarning("No level container assign. Cannot change grid cell size.");
+                    return;
+                }
+
                 data.cellSize = evt.newValue;
                 bool isPrimaryGrid = data == _primaryGridData;
                 SaveGrid(isPrimaryGrid, data);

@@ -24,7 +24,7 @@ namespace Game.OnlyEditor
 
         private void UpdateContainerBusData()
         {
-            if (_levelEditor.selectedLevelContainer != null)
+            if (_levelEditor.selectedLevelContainer)
             {
                 _levelEditor.selectedLevelContainer.busData.buses.Clear();
                 _levelEditor.selectedLevelContainer.busData.buses.AddRange(_busColors);
@@ -33,7 +33,7 @@ namespace Game.OnlyEditor
 
         private void SyncBusData()
         {
-            if (_levelEditor.selectedLevelContainer != null)
+            if (_levelEditor.selectedLevelContainer)
             {
                 _busColors.Clear();
                 _busColors.AddRange(_levelEditor.selectedLevelContainer.busData.buses);
@@ -63,7 +63,7 @@ namespace Game.OnlyEditor
             _busListView.itemsSource = _busColors;
             _busListView.selectionType = SelectionType.Single;
 
-            if (_levelEditor.selectedLevelContainer != null)
+            if (_levelEditor.selectedLevelContainer)
             {
                 _busColors.Clear();
                 _busColors.AddRange(_levelEditor.selectedLevelContainer.busData.buses);
@@ -77,6 +77,7 @@ namespace Game.OnlyEditor
 
             var addButton = new Button(() =>
             {
+                if (!CheckLevelContainer()) return;
                 _busColors.Add(ColorList.Red);
                 _busListView.Rebuild();
                 UpdateContainerBusData();

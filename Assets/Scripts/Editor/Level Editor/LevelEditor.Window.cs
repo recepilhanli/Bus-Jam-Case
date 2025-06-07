@@ -42,7 +42,6 @@ namespace Game.OnlyEditor
 
         private static void ShowLevelEditorInfo()
         {
-
             EditorWindow dumpWindow = CreateInstance<EditorWindow>();
             dumpWindow.titleContent = new GUIContent("Level Editor Message");
             dumpWindow.minSize = new Vector2(300, 50);
@@ -52,6 +51,18 @@ namespace Game.OnlyEditor
             dumpWindow.rootVisualElement.Add(new Label("Click Unity's Play Mode button to test your level."));
             dumpWindow.ShowUtility();
         }
+
+        private static bool CheckLevelContainer()
+        {
+            if (!_levelEditor || !_levelEditor.selectedLevelContainer)
+            {
+                EditorUtility.DisplayDialog("No Level Assigned", "Please assign a level in the overlay to edit.", "OK");
+                return false;
+            }
+
+            return true;
+        }
+
 
         private void OnEnable()
         {
