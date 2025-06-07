@@ -144,6 +144,7 @@ namespace Game.OnlyEditor
                 LevelEditor.onLevelContainerUpdated -= UpdateCells;
                 LevelEditor.onEditorCellUpdated -= UpdateCell;
                 LevelEditor.onCellsRefreshed -= UpdateCells;
+                LevelEditor.onLevelContainerUpdated -= SyncBusData;
             }
             _instance = null;
         }

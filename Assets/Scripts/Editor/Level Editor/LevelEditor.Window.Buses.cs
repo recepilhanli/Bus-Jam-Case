@@ -31,6 +31,16 @@ namespace Game.OnlyEditor
             }
         }
 
+        private void SyncBusData()
+        {
+            if (_levelEditor.selectedLevelContainer != null)
+            {
+                _busColors.Clear();
+                _busColors.AddRange(_levelEditor.selectedLevelContainer.busData.buses);
+                _busListView.Rebuild();
+            }
+        }
+
 
 
 
@@ -39,7 +49,7 @@ namespace Game.OnlyEditor
             _busOverlayRoot = CreateTitle("Edit Buses");
             _busOverlayRoot.style.flexDirection = FlexDirection.Column;
 
-            LevelEditor.onLevelContainerUpdated += UpdateContainerBusData;
+            LevelEditor.onLevelContainerUpdated += SyncBusData;
 
             ScrollView scrollView = new ScrollView(ScrollViewMode.Vertical);
             scrollView.style.flexGrow = 1;
@@ -55,30 +65,7 @@ namespace Game.OnlyEditor
                 _busColors.AddRange(_levelEditor.selectedLevelContainer.busData.buses);
             }
 
-            _busListView.makeItem = () =>
-            {
-                var container = new VisualElement();
-                container.style.flexDirection = FlexDirection.Row;
-                container.style.alignItems = Align.Center;
-
-                var enumField = new EnumField(ColorList.White);
-                enumField.style.flexGrow = 1;
-
-                enumField.RegisterValueChangedCallback(evt =>
-                {
-                    UpdateContainerBusData();
-                });
-
-                var removeButton = new Button { text = "X" };
-                removeButton.style.width = 25;
-                removeButton.style.marginLeft = 4;
-                removeButton.style.unityTextAlign = TextAnchor.MiddleCenter;
-
-
-                container.Add(enumField);
-                container.Add(removeButton);
-                return container;
-            };
+            _busListView.makeItem = GetBusColorField;
 
             _busListView.bindItem = (element, index) =>
             {
@@ -92,6 +79,7 @@ namespace Game.OnlyEditor
                 enumField.RegisterValueChangedCallback(evt =>
                 {
                     _busColors[index] = (ColorList)evt.newValue;
+                    UpdateContainerBusData();
                 });
 
                 removeButton.clickable.clicked -= null;
@@ -143,6 +131,24 @@ namespace Game.OnlyEditor
         }
 
 
+
+        private VisualElement GetBusColorField()
+        {
+            var container = new VisualElement();
+            container.style.flexDirection = FlexDirection.Row;
+            container.style.alignItems = Align.Center;
+
+            var enumField = new EnumField(ColorList.White);
+            enumField.style.flexGrow = 1;
+
+            var removeButton = new Button { text = "X" };
+            removeButton.style.width = 25;
+            removeButton.style.marginLeft = 4;
+            removeButton.style.unityTextAlign = TextAnchor.MiddleCenter;
+            container.Add(enumField);
+            container.Add(removeButton);
+            return container;
+        }
 
 
     }
