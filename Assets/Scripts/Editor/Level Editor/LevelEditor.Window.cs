@@ -36,6 +36,21 @@ namespace Game.OnlyEditor
             _instance.maxSize = new Vector2(300, 400);
 
             _instance.Show();
+
+            ShowLevelEditorInfo();
+        }
+
+        private static void ShowLevelEditorInfo()
+        {
+
+            EditorWindow dumpWindow = CreateInstance<EditorWindow>();
+            dumpWindow.titleContent = new GUIContent("Level Editor Message");
+            dumpWindow.minSize = new Vector2(300, 50);
+            dumpWindow.maxSize = dumpWindow.minSize;
+            dumpWindow.rootVisualElement.style.flexDirection = FlexDirection.Column;
+            dumpWindow.rootVisualElement.style.backgroundColor = new Color(0.1f, 0.1f, 0.1f, 1f);
+            dumpWindow.rootVisualElement.Add(new Label("Click Unity's Play Mode button to test your level."));
+            dumpWindow.ShowUtility();
         }
 
         private void OnEnable()

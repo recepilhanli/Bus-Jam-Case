@@ -333,7 +333,8 @@ namespace Game.OnlyEditor
 
         private void UpdateCellGUI()
         {
-            if (_cellsOverlayRoot.style.display == DisplayStyle.None)
+
+            if (_cellsOverlayRoot == null || _cellsOverlayRoot.style.display == DisplayStyle.None)
                 return;
 
             Event e = Event.current;
