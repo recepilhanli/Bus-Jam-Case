@@ -17,6 +17,8 @@ namespace Game.OnlyEditor
     [Overlay(typeof(SceneView), "Level Editor Overlay", true)]
     public partial class LevelEditorOverlay : Overlay
     {
+        public static LevelEditorOverlay instance;
+
         private VisualElement _root;
 
         private ObjectField _selectedLevelContainerField;
@@ -28,16 +30,19 @@ namespace Game.OnlyEditor
 
             EditorSceneManager.sceneOpened += OnSceneChanged;
             Selection.selectionChanged += OnSelectionChanged;
+            LevelEditor.onLevelContainerUpdated += OnLevelContainerUpdated;
 
             CreateDefaultContent();
             CreateGridPanelContent();
             CreateCellPanelContent();
 
             if (SceneHelper.isGameScene || SceneHelper.isHomeScene) displayed = false;
+            instance = this;
 
             return _root;
 
         }
+
 
         private void CreateDefaultContent()
         {
@@ -62,9 +67,17 @@ namespace Game.OnlyEditor
                     width = 250
                 },
 
-                tooltip = "Select a level to edit. If you don't have any levels, create one using the button below."
+                tooltip = "Select a level to edit. If you don't have any levels, create one using the button below.",
+                value = _levelEditor ? _levelEditor.selectedLevelContainer : null,
+
             };
 
+            //Unity had removed search functionality from ObjectField, so we need to handle it manually
+
+            _selectedLevelContainerField.RegisterCallback<ClickEvent>(evt =>
+             {
+                 LevelContainerSelectorWindow.ShowWindow();
+             });
 
             var createLevelButton = new Button(() =>
             {
@@ -145,6 +158,7 @@ namespace Game.OnlyEditor
         private void CloseAllWindows()
         {
             LevelEditorWindow.DestroyInstance();
+            LevelContainerSelectorWindow.DestroyInstance();
         }
 
 
@@ -158,17 +172,34 @@ namespace Game.OnlyEditor
                 displayed = false;
                 return;
             }
-            
+
             displayed = true;
             _levelEditor = LevelEditor.instance;
             _selectedLevelContainerField.value = _levelEditor.selectedLevelContainer;
         }
 
 
+
+        private void OnLevelContainerUpdated()
+        {
+            if (_levelEditor == null)
+            {
+                Debug.LogError("LevelEditor instance is null. Cannot update level container.");
+                return;
+            }
+
+            if (_levelEditor.selectedLevelContainer != null)
+            {
+                _selectedLevelContainerField.value = _levelEditor.selectedLevelContainer;
+                Debug.Log($"Level container updated: {_levelEditor.selectedLevelContainer.name}");
+            }
+        }
+
         ~LevelEditorOverlay()
         {
             EditorSceneManager.sceneOpened -= OnSceneChanged;
             Selection.selectionChanged -= OnSelectionChanged;
+            LevelEditor.onLevelContainerUpdated -= OnLevelContainerUpdated;
         }
     }
 

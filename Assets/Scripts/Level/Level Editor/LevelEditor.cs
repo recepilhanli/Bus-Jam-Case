@@ -42,6 +42,7 @@ namespace Game.OnlyEditor
             get => _selectedLevelContainer;
             set
             {
+                if(value == _selectedLevelContainer) return;
                 _selectedLevelContainer = value;
                 RefreshGrids();
                 onLevelContainerUpdated?.Invoke();

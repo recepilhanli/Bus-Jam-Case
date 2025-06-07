@@ -5,6 +5,7 @@ using Game.Data;
 using Game.Level;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -87,11 +88,18 @@ namespace Game.OnlyEditor
             root.style.borderLeftColor = Color.gray;
             root.style.borderLeftWidth = 1;
 
+            VisualElement titleContainer = new VisualElement();
+            titleContainer.style.flexDirection = FlexDirection.Row;
+            titleContainer.style.justifyContent = Justify.FlexStart;
+
             Label titleLabel = new Label("Edit Level");
             titleLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
             titleLabel.style.fontSize = 20;
             titleLabel.style.marginBottom = 10;
-            root.Add(titleLabel);
+
+            titleContainer.Add(titleLabel);
+
+            root.Add(titleContainer);
             CreateToolButtons();
 
             CreateGridPanelContent();
