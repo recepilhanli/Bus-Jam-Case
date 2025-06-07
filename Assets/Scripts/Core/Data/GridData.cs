@@ -58,8 +58,8 @@ namespace Game.Data
     [Serializable]
     public class ExtendedGridData : GridData
     {
-        public List<PassengerData> passengers = null;
-        public List<ObstacleData> obstacles = null;
+        public List<PassengerData> passengers = new List<PassengerData>();
+        public List<ObstacleData> obstacles =  new List<ObstacleData>();
 
     }
 

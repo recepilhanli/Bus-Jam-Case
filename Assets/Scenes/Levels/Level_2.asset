@@ -18,11 +18,30 @@ MonoBehaviour:
     spacing: {x: 0.5, y: 0}
     cellSize: 1
   secondaryGrid:
-    gridSize: {x: 5, y: 1}
-    padding: {x: 1, y: 0}
+    gridSize: {x: 3, y: 3}
+    padding: {x: 1, y: 4}
     spacing: {x: 1, y: 1}
     cellSize: 1
-    passengers: []
+    passengers:
+    - gridPosition: {x: 1, y: 1}
+      color: 7
+    - gridPosition: {x: 1, y: 0}
+      color: 7
+    - gridPosition: {x: 2, y: 0}
+      color: 7
+    - gridPosition: {x: 1, y: 2}
+      color: 1
+    - gridPosition: {x: 2, y: 2}
+      color: 1
+    - gridPosition: {x: 2, y: 1}
+      color: 1
+    - gridPosition: {x: 0, y: 0}
+      color: 2
+    - gridPosition: {x: 0, y: 1}
+      color: 2
+    - gridPosition: {x: 0, y: 2}
+      color: 2
     obstacles: []
   busData:
-    buses: 03000000020000000100000000000000
+    buses: 
+  timeConstraint: 120

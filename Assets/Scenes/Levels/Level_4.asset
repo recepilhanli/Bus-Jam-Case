@@ -18,36 +18,36 @@ MonoBehaviour:
     spacing: {x: 0.5, y: 0}
     cellSize: 1
   secondaryGrid:
-    gridSize: {x: 4, y: 5}
-    padding: {x: 0, y: 0}
+    gridSize: {x: 4, y: 3}
+    padding: {x: 0, y: 4}
     spacing: {x: 1, y: 1}
     cellSize: 1
     passengers:
-    - gridPosition: {x: 3, y: 3}
-      color: 3
-    - gridPosition: {x: 2, y: 2}
-      color: 5
-    - gridPosition: {x: 2, y: 3}
-      color: 4
-    - gridPosition: {x: 0, y: 1}
-      color: 6
     - gridPosition: {x: 0, y: 2}
-      color: 3
-    - gridPosition: {x: 1, y: 1}
-      color: 8
-    - gridPosition: {x: 1, y: 4}
-      color: 3
-    - gridPosition: {x: 2, y: 4}
-      color: 3
-    - gridPosition: {x: 3, y: 4}
-      color: 4
-    - gridPosition: {x: 0, y: 0}
       color: 0
-    - gridPosition: {x: 2, y: 1}
-      color: 6
-    obstacles:
-    - gridPosition: {x: 1, y: 2}
-    - gridPosition: {x: 0, y: 4}
+    - gridPosition: {x: 3, y: 2}
+      color: 0
+    - gridPosition: {x: 1, y: 1}
+      color: 0
+    - gridPosition: {x: 2, y: 2}
+      color: 8
     - gridPosition: {x: 3, y: 1}
+      color: 8
+    - gridPosition: {x: 0, y: 1}
+      color: 8
+    - gridPosition: {x: 1, y: 2}
+      color: 1
+    - gridPosition: {x: 2, y: 1}
+      color: 1
+    - gridPosition: {x: 0, y: 0}
+      color: 1
+    - gridPosition: {x: 1, y: 0}
+      color: 5
+    - gridPosition: {x: 2, y: 0}
+      color: 5
+    - gridPosition: {x: 3, y: 0}
+      color: 5
+    obstacles: []
   busData:
-    buses: 
+    buses: 00000000080000000100000005000000
+  timeConstraint: 120

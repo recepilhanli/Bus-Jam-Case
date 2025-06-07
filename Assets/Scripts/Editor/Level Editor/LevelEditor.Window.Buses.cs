@@ -36,6 +36,11 @@ namespace Game.OnlyEditor
             if (_levelEditor.selectedLevelContainer)
             {
                 _busColors.Clear();
+                if (_levelEditor.selectedLevelContainer.busData.buses == null || _levelEditor.selectedLevelContainer.busData.buses.Count == 0)
+                {
+                    _busListView.Rebuild();
+                    return;
+                }
                 _busColors.AddRange(_levelEditor.selectedLevelContainer.busData.buses);
                 _busListView.Rebuild();
             }
