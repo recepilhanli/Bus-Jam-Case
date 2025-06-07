@@ -188,11 +188,9 @@ namespace Game.OnlyEditor
                 return;
             }
 
-            if (_levelEditor.selectedLevelContainer != null)
-            {
-                _selectedLevelContainerField.value = _levelEditor.selectedLevelContainer;
-                Debug.Log($"Level container updated: {_levelEditor.selectedLevelContainer.name}");
-            }
+            _selectedLevelContainerField.value = _levelEditor.selectedLevelContainer;
+            Debug.Log($"Level container updated: {_levelEditor.selectedLevelContainer.name}");
+
         }
 
         ~LevelEditorOverlay()
