@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace Game.Data
 {
-    public struct PlayerStateData
+    public class PlayerStateData
     {
         public int currentLevelIndex;
         public int coins;
         public int remainingLives;
 
 
-        public void Assign()
+        public void Apply()
         {
             PlayerStats.currentLevel = currentLevelIndex;
             PlayerStats.coins = coins;

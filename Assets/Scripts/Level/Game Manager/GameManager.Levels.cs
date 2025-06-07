@@ -18,7 +18,7 @@ namespace Game.Level
 
         private async UniTask InitLevels()
         {
-            if (SceneHelper.isGameScene) await LevelLoader.InitAsync(); //Temp
+            if (!LevelLoader.isInitialized) await UniTask.WaitUntil(() => LevelLoader.isInitialized);
 
             LevelContainer currentLevel = LevelLoader.currentLevel;
             if (currentLevel == null)
@@ -29,7 +29,7 @@ namespace Game.Level
 
             onLevelCompleted += () => CompleteLevelUI.enable = true;
             onLevelFailed += () => LevelLossUI.enable = true;
-            
+
 
             InitLevelContainer(currentLevel);
         }

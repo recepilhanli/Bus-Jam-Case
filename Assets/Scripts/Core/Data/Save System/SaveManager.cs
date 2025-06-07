@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Game.Level;
 using Game.Utils;
-using UnityEditor;
 using UnityEngine;
 
 
@@ -12,8 +11,18 @@ namespace Game.Data
     {
 
         private const string FILENAME_CURRENTLEVEL = "currentLevel";
+        private const string FILENAME_STATS = "playerStats";
 
         private static string path = Application.persistentDataPath + "/save{0}.json";
+        public static LevelSaveData currentLevelData { get; private set; }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Init()
+        {
+            LoadCurrentGame();
+            _ = LevelLoader.InitAsync();
+            Debug.Log("SaveManager initialized. Current level data: " + (currentLevelData != null));
+        }
 
 
         public static void Save<T>(T data, string fileName) where T : class
@@ -53,29 +62,55 @@ namespace Game.Data
             }
         }
 
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Debug/Save/Save Current Game")]
+#endif
         public static void SaveCurrentGame()
         {
+
+#if UNITY_EDITOR
+            if (Application.isPlaying == false)
+            {
+                Debug.LogWarning("Cannot save current game. Application is not playing.");
+                return;
+            }
+#endif
+
             if (GameManager.instance != null)
             {
                 LevelSaveData saveData = LevelSaveData.GetCurrentLevel();
                 Save(saveData, FILENAME_CURRENTLEVEL);
             }
             else DeleteSaveFile(FILENAME_CURRENTLEVEL);
+
+            PlayerStateData playerStateData = PlayerStateData.GetCurrentData();
+            Save(playerStateData, FILENAME_STATS);
         }
 
-
-        public LevelSaveData LoadCurrentGame()
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Debug/Save/Load Current Game")]
+#endif
+        public static void LoadCurrentGame()
         {
-            LevelSaveData saveData = Load<LevelSaveData>(FILENAME_CURRENTLEVEL);
-            return saveData;
+
+#if UNITY_EDITOR
+            if (Application.isPlaying == false)
+            {
+                Debug.LogWarning("Cannot save current game. Application is not playing.");
+                return;
+            }
+#endif
+
+            currentLevelData = Load<LevelSaveData>(FILENAME_CURRENTLEVEL);
+            PlayerStateData playerStateData = Load<PlayerStateData>(FILENAME_STATS);
+            playerStateData?.Apply();
+            return;
         }
 
-        public static void DeleteCurrentGame()
+        public static void DeleteCurrentLevel()
         {
             DeleteSaveFile(FILENAME_CURRENTLEVEL);
         }
-
-
 
     }
 
