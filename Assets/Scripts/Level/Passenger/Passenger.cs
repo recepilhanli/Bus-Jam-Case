@@ -45,6 +45,24 @@ namespace Game.Level
             passenger.transform.position = position;
             return passenger;
         }
+
+        public static Passenger GetFromPool(Vector2Int cellPos, ColorList color)
+        {
+            var cell = GameManager.instance.secondaryGrid.cells[cellPos.x, cellPos.y];
+            Debug.Assert(cell != null, "GridCell cannot be null when getting a Passenger from the pool.");
+            Debug.Assert(cell.isEmpty, "GridCell must be empty when getting a Passenger from the pool.");
+
+            Vector3 position = cell.worldPosition;
+
+            var passenger = PoolManager.GetObject<Passenger>(PoolTypes.Passenger, in position);
+            passenger.Color = color;
+            cell.SetPassenger(passenger);
+            passenger.transform.position = position;
+            return passenger;
+        }
+
+
+
         #endregion
     }
 

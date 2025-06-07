@@ -14,6 +14,12 @@ namespace Game.Data
     {
         public Vector2Int gridPosition;
         public ColorList color;
+
+        public PassengerData(Vector2Int position, ColorList color)
+        {
+            gridPosition = position;
+            this.color = color;
+        }
     }
 
 }

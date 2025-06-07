@@ -22,7 +22,9 @@ MonoBehaviour:
     padding: {x: 0, y: 0}
     spacing: {x: 1, y: 1}
     cellSize: 1
-    passengers: []
+    passengers:
+    - gridPosition: {x: 3, y: 3}
+      color: 0
     obstacles: []
   busData:
     buses: 

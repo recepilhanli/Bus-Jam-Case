@@ -1,12 +1,13 @@
+
+#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Data;
 using Game.Utils;
 using UnityEditor;
 using UnityEngine;
 
-
-#if UNITY_EDITOR
 namespace Game.OnlyEditor
 {
 
@@ -45,8 +46,10 @@ namespace Game.OnlyEditor
             {
                 _passengerColor = value;
                 LevelEditor.onEditorCellUpdated?.Invoke(this);
+                UpdateContainerCellContent();
             }
         }
+
 
 
         public EditorCellType cellType
@@ -56,13 +59,96 @@ namespace Game.OnlyEditor
             {
                 _cellType = value;
                 LevelEditor.onEditorCellUpdated?.Invoke(this);
+                UpdateContainerCellContent();
             }
         }
+
+        public void InitType(EditorCellType type)
+        {
+            _cellType = type;
+            LevelEditor.onEditorCellUpdated?.Invoke(this);
+        }
+
+        public void InitColor(ColorList color) => _passengerColor = color;
+
 
         private void Awake()
         {
             gameObject.hideFlags = HideFlags.NotEditable | HideFlags.DontSaveInEditor;
         }
+
+        private void UpdateContainerCellContent()
+        {
+            Debug.Assert(LevelEditor.instance != null, "LevelEditor instance is null.");
+            Debug.Assert(cellType != EditorCellType.Primary, "You used primary type in secondary grid.");
+
+            var container = LevelEditor.instance.selectedLevelContainer;
+
+            if (container == null)
+            {
+                Debug.LogError("Selected Level Container is null. Cannot update cell content.");
+                return;
+            }
+
+            ClearContainerCellContent(container);
+
+            if (cellType == EditorCellType.HasPassenger)
+            {
+                //add passenger
+                container.secondaryGrid.passengers.Add(new PassengerData(position, _passengerColor));
+            }
+            else if (cellType == EditorCellType.Obstacle)
+            {
+                //add obstacle
+                container.secondaryGrid.obstacles.Add(new ObstacleData(position));
+            }
+            else if (cellType == EditorCellType.Empty)
+            {
+                //do nothing
+            }
+            else
+            {
+                Debug.LogError($"Unknown cell type: {cellType}");
+            }
+
+
+
+            ClearContainerCellContent(LevelEditor.instance.selectedLevelContainer);
+
+            switch (cellType)
+            {
+                case EditorCellType.Empty:
+                    // Do nothing, already cleared
+                    break;
+                case EditorCellType.Obstacle:
+                    container.secondaryGrid.obstacles.Add(new ObstacleData(position));
+                    break;
+                case EditorCellType.HasPassenger:
+                    container.secondaryGrid.passengers.Add(new PassengerData(position, _passengerColor));
+                    break;
+                case EditorCellType.Primary:
+                    Debug.LogError("Primary cell type should not be used in secondary grid.");
+                    break;
+                default:
+                    Debug.LogError($"Unknown cell type: {cellType}");
+                    break;
+            }
+
+        }
+
+        private void ClearContainerCellContent(LevelContainer container)
+        {
+            Debug.Assert(container != null, "LevelContainer is null. Cannot clear cell content.");
+
+            var passengers = container.secondaryGrid.passengers;
+            passengers.RemoveAll(p => p.gridPosition == position);
+
+            var obstacles = container.secondaryGrid.obstacles;
+            obstacles.RemoveAll(o => o.gridPosition == position);
+        }
+
+
+
 
         private void OnDrawGizmos()
         {
@@ -88,26 +174,9 @@ namespace Game.OnlyEditor
             }
         }
 
-        private void OnGUI()
-        {
-            if (_labelStyle == null)
-            {
-                _labelStyle = new GUIStyle(GUI.skin.label)
-                {
-                    fontSize = 12,
-                    normal = { textColor = Color.white },
-                    alignment = TextAnchor.MiddleCenter
-                };
-            }
-
-
-        }
-
 
         private void DrawGizmos()
         {
-            if (_labelStyle != null) Handles.Label(transform.position + Vector3.up, $"({position.x}, {position.y})", _labelStyle);
-
 
             switch (cellType)
             {

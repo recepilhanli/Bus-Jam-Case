@@ -1,12 +1,13 @@
+
+#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.Data;
 using Game.Level;
+using Game.Utils;
 using UnityEngine;
 
-
-#if UNITY_EDITOR
 namespace Game.OnlyEditor
 {
     using CellTypes = EditorCellType;
@@ -116,7 +117,7 @@ namespace Game.OnlyEditor
                 {
                     EditorGridCell newCell = Instantiate(_cellPrefab, _gameManager.primaryGrid.GetCellWorldPosition(new Vector2Int(x, y)), Quaternion.identity);
                     newCell.transform.SetParent(_cellParent, true);
-                    newCell.cellType = CellTypes.Primary;
+                    newCell.InitType(CellTypes.Primary);
                     newCell.position = new Vector2Int(x, y);
                     _primaryCells[x, y] = newCell;
                 }
@@ -139,14 +140,41 @@ namespace Game.OnlyEditor
                     Vector2Int position = new Vector2Int(x, y);
                     EditorGridCell newCell = Instantiate(_cellPrefab, _gameManager.secondaryGrid.GetCellWorldPosition(position), Quaternion.identity);
                     newCell.transform.SetParent(_cellParent, true);
-                    newCell.cellType = FindSecondaryCellType(position);
                     newCell.position = position;
+                    newCell.InitType(FindSecondaryCellType(position));
+                    newCell.InitColor(GetPassengerColor(position));
                     _secondaryCells[x, y] = newCell;
                 }
             }
 
             onCellsRefreshed?.Invoke();
         }
+
+        private ColorList GetPassengerColor(in Vector2Int position)
+        {
+            if (_selectedLevelContainer == null)
+            {
+                Debug.LogError("Selected level container is null. Cannot get passenger color.");
+                return ColorList.White;
+            }
+
+            var passengers = _selectedLevelContainer.secondaryGrid.passengers;
+
+            if (passengers != null)
+            {
+                foreach (var passenger in passengers)
+                {
+                    if (passenger.gridPosition == position)
+                    {
+                        return passenger.color;
+                    }
+                }
+            }
+
+            return ColorList.White;
+        }
+
+
 
 
         private CellTypes FindSecondaryCellType(in Vector2Int position)

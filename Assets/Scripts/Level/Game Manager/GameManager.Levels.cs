@@ -74,6 +74,27 @@ namespace Game.Level
 
             primaryGrid.Init(levelContainer.primaryGrid);
             secondaryGrid.Init(levelContainer.secondaryGrid);
+
+            var passengers = levelContainer.secondaryGrid.passengers;
+            if (passengers != null)
+            {
+                foreach (var passengerData in passengers)
+                {
+                    var pos = passengerData.gridPosition;
+                    if (secondaryGrid.IsValidPosition(pos)) Passenger.GetFromPool(pos, passengerData.color);
+                }
+            }
+
+            var obstacles = levelContainer.secondaryGrid.obstacles;
+            if (obstacles != null)
+            {
+                foreach (var obstacleData in obstacles)
+                {
+                    var pos = obstacleData.gridPosition;
+                    if (secondaryGrid.IsValidPosition(pos)) secondaryGrid.cells[pos.x, pos.y].isObstacle = true;
+                }
+            }
+
             LoadBuses(in levelContainer.busData);
 
             CheckSecondaryGridFrontLine();

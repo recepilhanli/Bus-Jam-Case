@@ -102,8 +102,6 @@ namespace Game.Level
 
             cell.transform.position = worldPosition;
             cell.transform.localScale = new Vector3(grid.cellSize, 1, grid.cellSize);
-
-            if (!isInPrimaryGrid) Passenger.GetFromPool(cell, (ColorList)position.y); //temp
             return cell;
         }
         #endregion

@@ -11,6 +11,10 @@ namespace Game.Data
     public struct ObstacleData
     {
         public Vector2Int gridPosition;
+        public ObstacleData(Vector2Int position)
+        {
+            gridPosition = position;
+        }
     }
 
 }
