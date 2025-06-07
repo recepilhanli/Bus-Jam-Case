@@ -83,6 +83,7 @@ namespace Game.UI
         public void ReturnHome()
         {
             _returnHomeWarnPanel.SetActive(false);
+            enable = false;
             GameManager.instance.ReturnToHome();
         }
 
