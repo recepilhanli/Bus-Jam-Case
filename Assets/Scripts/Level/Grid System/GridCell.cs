@@ -16,6 +16,7 @@ namespace Game.Level
         public Collider cellCollider;
         public Renderer cellRenderer;
         public NavMeshObstacle navMeshObstacle;
+        public GameObject cellObstacle; // Used for visual representation of obstacles
 
 
         [Header("Read-Only Values")]
@@ -45,6 +46,8 @@ namespace Game.Level
                 if (_isObstacle == value) return;
                 cellCollider.enabled = !value;
                 cellRenderer.enabled = !value;
+
+                cellObstacle.SetActive(value);
             }
         }
 
