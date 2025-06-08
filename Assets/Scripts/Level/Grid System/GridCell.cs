@@ -27,7 +27,7 @@ namespace Game.Level
 
         public Vector2Int position { get => _position; }
         public Passenger passenger { get => _passenger; }
-        public bool isEmpty => _passenger == null || _isObstacle;
+        public bool isEmpty => _passenger == null || !_isObstacle;
 
         public Grid attachedGrid => isInPrimaryGrid ? GameManager.instance.primaryGrid : GameManager.instance.secondaryGrid;
         public Vector3 worldPosition => attachedGrid.GetCellWorldPosition(_position);
