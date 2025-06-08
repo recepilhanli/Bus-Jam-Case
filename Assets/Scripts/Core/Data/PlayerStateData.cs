@@ -11,6 +11,7 @@ namespace Game.Data
         public int currentLevelIndex;
         public int coins;
         public int remainingLives;
+        public int remainingTimeForRegainLife;
 
 
         public void Apply()
@@ -18,6 +19,7 @@ namespace Game.Data
             PlayerStats.currentLevel = currentLevelIndex;
             PlayerStats.coins = coins;
             PlayerStats.remainingLives = remainingLives;
+            PlayerStats.remainingTimeForRegainLife = remainingTimeForRegainLife;
         }
 
         public static PlayerStateData GetCurrentData()
@@ -26,6 +28,7 @@ namespace Game.Data
             data.currentLevelIndex = PlayerStats.currentLevel;
             data.coins = PlayerStats.coins;
             data.remainingLives = PlayerStats.remainingLives;
+            data.remainingTimeForRegainLife = PlayerStats.remainingTimeForRegainLife;
             return data;
         }
     }

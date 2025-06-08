@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Game;
 using Game.Player;
 using TMPro;
@@ -14,10 +15,12 @@ namespace Game.UI
 
         [SerializeField] private TextMeshProUGUI _remainingTimeText;
 
-        private void Start()
+        private async UniTaskVoid Start()
         {
+            await UniTask.DelayFrame(3); // Wait for the first frame to ensure PlayerStats is initialized
+            if (!this) return;
             PlayerStats.onRemainingLivesChanged += UpdateLifeTMP;
-
+            UpdateLifeTMP(PlayerStats.remainingLives);
         }
 
         private void UpdateLifeTMP(int remainingLives)
