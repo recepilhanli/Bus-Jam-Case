@@ -1,6 +1,5 @@
-# Level Editor
-
-A Unity-based Level Editor tool designed for easy creation and testing of game levels.
+# Bus Jam Case
+This is a **case project** developed as part of the **Bus Jam** game.  
 
 ## 🚀 Getting Started
 
