@@ -24,6 +24,7 @@ namespace Game.Level
         public const int MAX_LEVEL_COUNT = 5; //Maximum number of levels in ram
 
         private static int _currentLevelIndex = 0;
+        private static int _lastLevelNumber = 0;
         private static bool _isInitialized = false;
 
         public static LevelContainer[] levelContainers => _levelContainers;
@@ -54,6 +55,8 @@ namespace Game.Level
                 }
             }
 
+            _lastLevelNumber = PlayerStats.currentLevel - 1;
+
             _levelContainers = new LevelContainer[MAX_LEVEL_COUNT];
             await LoadLevelsAsync();
         }
@@ -72,7 +75,7 @@ namespace Game.Level
 
         private static async UniTask LoadLevelsAsync()
         {
-
+            _lastLevelNumber = PlayerStats.currentLevel - 1;
             for (int i = 0; i < MAX_LEVEL_COUNT; i++)
             {
                 var levelAddress = $"{LEVEL_CONTAINER_ADDRESS}{LEVEL_PREFIX}{i + PlayerStats.currentLevel}.asset";
@@ -83,6 +86,7 @@ namespace Game.Level
                     if (levelContainer != null)
                     {
                         _levelContainers[i] = levelContainer;
+                        _lastLevelNumber++;
                         Debug.Log($"Level {i} loaded from address: {levelAddress}");
                     }
                 }
@@ -129,12 +133,16 @@ namespace Game.Level
             Addressables.Release(currentLevel);
             _levelContainers[_currentLevelIndex] = null;
             _currentLevelIndex++;
+            _lastLevelNumber++;
 
+
+            var nextLevelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{_lastLevelNumber}.asset";
+            var nextLevelContainer = await Addressables.LoadAssetAsync<LevelContainer>(nextLevelAddress).Task;
+
+            int assignedIndex = _currentLevelIndex - 1;
             if (_currentLevelIndex >= _levelContainers.Length) _currentLevelIndex = 0;
 
-            var nextLevelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{PlayerStats.currentLevel}.asset";
-            var nextLevelContainer = await Addressables.LoadAssetAsync<LevelContainer>(nextLevelAddress).Task;
-            if (nextLevelContainer != null) _levelContainers[_currentLevelIndex - 1] = nextLevelContainer;
+            if (nextLevelContainer != null) _levelContainers[assignedIndex] = nextLevelContainer;
             else Debug.LogWarning($"Next level not found at address: {nextLevelAddress}");
         }
 
