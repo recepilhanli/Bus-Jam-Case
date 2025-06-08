@@ -1,5 +1,4 @@
 # Bus Jam Case
-This is a **case project** developed as part of the **Bus Jam** game.  
 
 ## 🚀 Getting Started
 
