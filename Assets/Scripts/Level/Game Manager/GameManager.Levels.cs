@@ -45,6 +45,7 @@ namespace Game.Level
             if (nextLevel == null)
             {
                 Debug.LogError("Next level is null. Returning to home.");
+                NotificationUI.ShowNotification("No more levels available.");
                 ReturnToHome();
                 return;
             }
@@ -119,6 +120,7 @@ namespace Game.Level
             else
             {
                 Debug.Log("No remaining lives. Returning to home.");
+                NotificationUI.ShowNotification("No lives left. Returning to home.");
                 ReturnToHome();
             }
 

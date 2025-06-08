@@ -15,6 +15,12 @@ namespace Game.UI
         [SerializeField] private ShakeSettings _shakeSettings;
         [SerializeField] private TweenSettings _fadeSettings;
 
+        private void Start()
+        {
+            transform.SetParent(null); //make sure the UI is not a child of any other object
+            DontDestroyOnLoad(gameObject);
+        }
+
         public static void ShowNotification(string message)
         {
             if (instance == null)
@@ -28,7 +34,7 @@ namespace Game.UI
             instance._notificationTmp.text = message;
             instance.gameObject.SetActive(true);
             Tween.ShakeLocalPosition(instance._panelTransform, instance._shakeSettings);
-            Tween.Alpha(instance._canvasGroup, 0, .5f, instance._fadeSettings);
+            Tween.Alpha(instance._canvasGroup, 0, 1f, instance._fadeSettings);
         }
     }
 
