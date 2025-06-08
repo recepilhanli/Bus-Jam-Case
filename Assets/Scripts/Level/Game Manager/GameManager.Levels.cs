@@ -48,14 +48,16 @@ namespace Game.Level
                 Debug.LogError("Next level is null. Returning to home.");
                 NotificationUI.ShowNotification("No more levels available, level progression is reset.");
                 PlayerStats.currentLevel = 1;
-                SaveManager.SavePlayerState();
+                _ = LevelLoader.Reload();
                 ReturnToHome();
                 return;
             }
 
             FadeUI.FadeOut(2.5f, true);
+            SaveManager.DeleteCurrentLevel(); 
+
             PlayerStats.currentLevel++;
-            SaveManager.SavePlayerState(); //Save player state before loading next level
+            SaveManager.SavePlayerState(); 
 
             _ = LevelLoader.LoadNextLevelAsync(); //Lazy loading next level
 

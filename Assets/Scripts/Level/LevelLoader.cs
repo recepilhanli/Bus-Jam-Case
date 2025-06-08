@@ -42,6 +42,23 @@ namespace Game.Level
             await LoadLevelsAsync();
         }
 
+        public static async UniTask Reload()
+        {
+            if (!isInitialized) return;
+
+            foreach (var level in _levelContainers)
+            {
+                if (level != null)
+                {
+                    Addressables.Release(level);
+                }
+            }
+            
+            _levelContainers = new LevelContainer[MAX_LEVEL_COUNT];
+            await LoadLevelsAsync();
+        }
+
+
         public static void InitPersistent(LevelContainer level)
         {
             if (isInitialized) return;
@@ -71,7 +88,7 @@ namespace Game.Level
                 }
                 catch
                 {
-                 Debug.LogWarning($"Level {i} not found at address: {levelAddress}");
+                    Debug.LogWarning($"Level {i} not found at address: {levelAddress}");
                 }
             }
 
