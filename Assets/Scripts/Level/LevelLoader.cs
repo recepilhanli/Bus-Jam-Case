@@ -53,7 +53,7 @@ namespace Game.Level
                     Addressables.Release(level);
                 }
             }
-            
+
             _levelContainers = new LevelContainer[MAX_LEVEL_COUNT];
             await LoadLevelsAsync();
         }
@@ -132,7 +132,7 @@ namespace Game.Level
 
             if (_currentLevelIndex >= _levelContainers.Length) _currentLevelIndex = 0;
 
-            var nextLevelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{PlayerStats.currentLevel}";
+            var nextLevelAddress = $"{LEVEL_CONTAINER_ADDRESS}Level_{PlayerStats.currentLevel}.asset";
             var nextLevelContainer = await Addressables.LoadAssetAsync<LevelContainer>(nextLevelAddress).Task;
             if (nextLevelContainer != null) _levelContainers[_currentLevelIndex - 1] = nextLevelContainer;
             else Debug.LogWarning($"Next level not found at address: {nextLevelAddress}");
