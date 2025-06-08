@@ -88,6 +88,7 @@ namespace Game.Level
         {
             get
             {
+                if(_isObstacle) return false; 
                 if (position.y == attachedGrid.height - 1) return true; // If it's the last row, it can always move up
 
                 //check neighbors

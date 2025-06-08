@@ -11,10 +11,10 @@ namespace Game.Level
     public class Grid : MonoBehaviour
     {
         public static readonly Vector2Int[] directions = {
-                    new Vector2Int(1, 0), // Right
-                    new Vector2Int(-1, 0), // Left
                     new Vector2Int(0, 1), // Up
-                    new Vector2Int(0, -1) // Down
+                    new Vector2Int(0, -1), // Down
+                    new Vector2Int(1, 0), // Right
+                    new Vector2Int(-1, 0) // Left
                 };
 
         public GridCell[,] cells;

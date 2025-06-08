@@ -58,18 +58,31 @@ namespace Game.Level
         {
             int totalMarkedPassengers = 0;
 
-            for (int y = 0; y < secondaryGrid.height; y++)
+            for (int y = secondaryGrid.height - 1; y >= 0; y--)
             {
                 for (int x = 0; x < secondaryGrid.width; x++)
                 {
                     var cell = secondaryGrid.cells[x, y];
-                    if (!cell || !cell.passenger) continue; 
-                    else if (cell.isEmpty) continue;
-                    else if (!cell.hasSpaceToMove) continue;
+                    if (!cell || !cell.passenger) continue;
 
-                    cell.passenger.MarkPassenger();
-                    totalMarkedPassengers++;
-                    if (totalMarkedPassengers >= secondaryGrid.width) break;
+                    var position = cell.position + Grid.directions[0]; // Up direction
+
+                    if (!secondaryGrid.IsValidPosition(position))
+                    {
+                        cell.passenger.MarkPassenger();
+                        totalMarkedPassengers++;
+                        if (totalMarkedPassengers >= secondaryGrid.width) break;
+                        continue;
+                    }
+
+                    var neighborCell = secondaryGrid.cells[position.x, position.y];
+                    if (neighborCell.isEmpty)
+                    {
+                        cell.passenger.MarkPassenger();
+                        totalMarkedPassengers++;
+                        if (totalMarkedPassengers >= secondaryGrid.width) break;
+                    }
+
                 }
             }
         }
