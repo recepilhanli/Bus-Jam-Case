@@ -39,20 +39,22 @@ namespace Game.Level
         public void GetNextLevel()
         {
             PoolManager.ResetAllPools();
+            SaveManager.DeleteCurrentLevel();
             Reset();
 
             LevelContainer nextLevel = LevelLoader.nextLevel;
             if (nextLevel == null)
             {
                 Debug.LogError("Next level is null. Returning to home.");
-                NotificationUI.ShowNotification("No more levels available.");
+                NotificationUI.ShowNotification("No more levels available, level progression is reset.");
+                PlayerStats.currentLevel = 1;
+                SaveManager.SavePlayerState();
                 ReturnToHome();
                 return;
             }
 
             FadeUI.FadeOut(2.5f, true);
             PlayerStats.currentLevel++;
-            SaveManager.DeleteCurrentLevel(); //Delete current level save data
             SaveManager.SavePlayerState(); //Save player state before loading next level
 
             _ = LevelLoader.LoadNextLevelAsync(); //Lazy loading next level
