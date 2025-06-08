@@ -72,7 +72,7 @@ namespace Game.UI
 
         private void OnDestroy()
         {
-            PlayerStats.onRemainingLivesChanged -= UpdateTimerText;
+            PlayerStats.onRegainLifeTimerChanged -= UpdateTimerText;
             PlayerStats.onRegainLifeEnd -= Disable;
         }
 
