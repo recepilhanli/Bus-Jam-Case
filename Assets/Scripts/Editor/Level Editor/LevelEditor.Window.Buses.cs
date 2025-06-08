@@ -26,6 +26,11 @@ namespace Game.OnlyEditor
         {
             if (_levelEditor.selectedLevelContainer)
             {
+                if (_levelEditor.selectedLevelContainer.busData.buses == null)
+                {
+                    _levelEditor.selectedLevelContainer.busData.buses = new List<ColorList>();
+                }
+
                 _levelEditor.selectedLevelContainer.busData.buses.Clear();
                 _levelEditor.selectedLevelContainer.busData.buses.AddRange(_busColors);
             }
@@ -70,6 +75,12 @@ namespace Game.OnlyEditor
 
             if (_levelEditor.selectedLevelContainer)
             {
+                
+                if (_levelEditor.selectedLevelContainer.busData.buses == null)
+                {
+                    _levelEditor.selectedLevelContainer.busData.buses = new List<ColorList>();
+                }
+
                 _busColors.Clear();
                 _busColors.AddRange(_levelEditor.selectedLevelContainer.busData.buses);
             }
